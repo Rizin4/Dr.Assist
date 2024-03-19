@@ -1,0 +1,79 @@
+version: "3.1"
+
+stories:
+    - story: path one
+      steps:
+          - intent: greet
+          - action: action_set_name
+          - action: utter_greet
+
+          - action: utter_height
+          - intent: provide_height
+          - action: action_form_sentence
+
+          - action: utter_weight
+          - intent: provide_weight
+          - action: action_form_sentence
+
+          - action: utter_temperature
+          - intent: provide_temperature
+          - action: action_form_sentence
+
+          - action: utter_blood_pressure
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_blood_pressure
+
+          - action: utter_glucose_level
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_glucose_level
+
+          - action: utter_medical_history
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_medical_history
+          - action: utter_medications
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_medications
+          - action: utter_allergies
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_allergies
+          - action: utter_family_history
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_family_history
+          - action: utter_smoking
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_smoking
+          - action: utter_alcohol_consumption
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_alcohol_consumption
+          - action: utter_daily_habits
+          - intent: provide_daily_habits
+          - action: utter_sleep
+          - intent: provide_sleep
+          - action: utter_stress
+          - or:
+                - intent: deny
+                - intent: affirm
+                - intent: provide_stress
+          - action: utter_education_living
+          - intent: provide_education_living
+          - action: utter_additional_info
+          - intent: provide_additional_info
+
+          - intent: goodbye
+          - action: utter_goodbye

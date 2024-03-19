@@ -1,0 +1,191 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - hey
+      - hello
+      - hi
+      - hello there
+      - good morning
+      - good evening
+      - moin
+      - hey there
+      - let's go
+      - hey dude
+      - goodmorning
+      - goodevening
+      - good afternoon
+
+  - intent: provide_height
+    examples: |
+      - I am 5 feet 7 inches tall
+      - My height is 170 cm
+      - 6 feet
+      - 180 centimeters
+      - 5'7"
+
+  - intent: provide_weight
+    examples: |
+      - I weigh 70 kg
+      - My weight is 150 pounds
+      - 80 kilograms
+      - 160 lbs
+
+  - intent: provide_temperature
+    examples: |
+      - My body temperature is 98.6 degrees Fahrenheit
+      - I have a fever of 102 degrees
+      - 37.5 degrees Celsius
+      - 100.4 F
+      - 38 C
+
+  - intent: provide_blood_pressure
+    examples: |
+      - My blood pressure is 120 over 80
+      - 130/85
+      - Blood pressure is 140/90
+
+  - intent: provide_glucose_level
+    examples: |
+      - My glucose level is 100 mg/dL
+      - Blood sugar is 5.5 mmol/L
+      - 120 mg/dL
+      - 6.7 mmol/L
+
+  - intent: provide_medical_history
+    examples: |
+      - I have a history of diabetes
+      - I've had a heart attack
+      - I was diagnosed with cancer
+      - I had surgery for appendicitis
+      - I had a knee replacement
+      - I was diagnosed with asthma as a child
+
+  - intent: provide_medications
+    examples: |
+      - I take insulin for my diabetes
+      - I'm on blood pressure medication
+      - I take allergy medication
+      - I take a multivitamin every day
+      - used to take medication for high cholesterol
+      - used to take medication for depression
+
+  - intent: provide_allergies
+    examples: |
+      - I'm allergic to peanuts
+      - I have a shellfish allergy
+      - I'm allergic to penicillin
+      - problem with pollen
+
+  - intent: provide_family_history
+    examples: |
+      - My father had heart disease
+      - My mother has diabetes
+      - Cancer runs in my family
+
+  - intent: provide_smoking
+    examples: |
+      - I smoke a pack a day
+      - I quit smoking years ago
+      - I've never smoked
+
+  - intent: provide_alcohol_consumption
+    examples: |
+      - I drink a glass of wine with dinner
+      - I don't drink alcohol
+      - I occasionally have a beer
+
+  - intent: provide_daily_habits
+    examples: |
+      - I exercise every day
+      - I walk to work
+      - I eat a balanced diet
+
+  - intent: provide_sleep
+    examples: |
+      - I sleep 8 hours a night
+      - I have trouble sleeping
+      - I usually get 6 hours of sleep
+
+  - intent: provide_stress
+    examples: |
+      - I've been feeling stressed lately
+      - I'm under a lot of pressure at work
+      - I try to manage my stress with meditation
+
+  - intent: provide_education_living
+    examples: |
+      - I have a bachelor's degree
+      - I live in a city
+      - I'm a high school graduate and live in the countryside
+
+  - intent: provide_additional_info
+    examples: |
+      - Actually, the pain is more of a dull ache than a sharp stab.
+      - The nausea comes and goes, mostly in the mornings.
+      - My cough has been going on for about a week now.
+      - I forgot to mention, I have asthma.
+      - I was diagnosed with high blood pressure last year.
+      - I'm currently taking medication for anxiety.
+      - My dad also had heart problems at a similar age.
+      - I had a bad case of pneumonia a few years back. 
+      - I recently traveled abroad and might have picked up something.
+      - I don't exercise much, I should probably change that.
+      - My diet could definitely be healthier.
+      - I've been under a lot of stress lately.
+      - Is there anything else I should be thinking about?
+      - Maybe it's worth mentioning that
+      - Oh, and one more thing
+      - I have a family history of heart disease 
+      - This has been bothering me for a while.  
+      - It seems to get worse at night. 
+      - I'm not sure if it's related, but
+      - I think it started a few days/weeks ago.
+      - Could this be because of my new job? 
+      - I'm starting to get really worried about this.
+      - What else could be causing this?
+
+  - intent: goodbye
+    examples: |
+      - cu
+      - good by
+      - cee you later
+      - good night
+      - bye
+      - goodbye
+      - have a nice day
+      - see you around
+      - bye bye
+      - see you later
+
+  - intent: bot_challenge
+    examples: |
+      - are you a bot?
+      - are you a human?
+      - am I talking to a bot?
+      - am I talking to a human?
+      - are you a real person?
+      - Prove you're not a bot
+      - You're a robot, right?
+
+
+  - intent: affirm
+    examples: |
+      - yes
+      - y
+      - indeed
+      - of course
+      - that sounds good
+      - correct
+
+  - intent: deny
+    examples: |
+      - no
+      - n
+      - never
+      - I don't think so
+      - don't like that
+      - no way
+      - not really
+

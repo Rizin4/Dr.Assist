@@ -1,0 +1,101 @@
+version: "3.1"
+
+intents:
+  - greet
+  - provide_height
+  - provide_weight
+  - provide_temperature
+  - provide_blood_pressure
+  - provide_glucose_level
+  - provide_medical_history
+  - provide_medications
+  - provide_allergies
+  - provide_family_history
+  - provide_smoking
+  - provide_alcohol_consumption
+  - provide_daily_habits
+  - provide_sleep
+  - provide_stress
+  - provide_education_living
+  - provide_additional_info
+  - goodbye
+  - bot_challenge
+  - affirm
+  - deny
+
+# entities:
+
+slots:
+  name:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+# forms:
+
+responses:
+  utter_greet:
+    - text: "Hi {name}! I'm Dr. Assist, your virtual medical assistant. I'm here to help gather some information to give your healthcare provider a good starting point."
+
+  utter_height:
+    - text: "To get things started, could you tell me your height? (in cm)"
+
+  utter_weight:
+    - text: "Thank you. And what is your current weight?"
+
+  utter_temperature:
+    - text: "Got it. Could you please take your temperature and tell me the reading?"
+
+  utter_blood_pressure:
+    - text: "Now, if you have a blood pressure cuff, please use it and let me know your systolic and diastolic readings. If you don't have one, that's okay."
+
+  utter_glucose_level:
+    - text: "Do you have a glucose meter? If so, please take your glucose reading and let me know the result. If you don't have one, that's okay."
+
+  utter_medical_history:
+    - text: "Thanks! Now let's shift to your medical history. Have you had any significant illnesses or surgeries in the past?"
+
+  utter_medications:
+    - text: "Okay. Are you currently taking any medications, either prescription or over-the-counter?"
+
+  utter_allergies:
+    - text: "Thanks for letting me know. Are there any other allergies you'd like me to note down (medications, foods, anything else)?"
+
+  utter_family_history:
+    - text: " Does anyone in your immediate family have a history of heart disease, diabetes, or any other chronic conditions?"
+
+  utter_smoking:
+    - text: "I'll make a note of that. Now, let's talk about your daily habits. Do you smoke?"
+
+  utter_alcohol_consumption:
+    - text: "How about alcohol consumption?"
+
+  utter_daily_habits:
+    - text: "Got it. Could you walk me through what you usually eat in a day and how much physical activity you typically get?"
+
+  utter_sleep:
+    - text: "Is your sleep generally good, or do you have trouble sleeping?"
+
+  utter_stress:
+    - text: "Would you say you experience stress often? If so, what are some things that tend to stress you out?"
+
+  utter_education_living:
+    - text: "To understand your health picture more comprehensively, it would be helpful if you could share your highest level of education and describe your general living situation. This information can help identify any social determinants of health that may be relevant to your care. Of course, all your answers are confidential."
+
+  utter_additional_info:
+    - text: " I'm going to compile this information into a summary for your healthcare provider. Is there anything else you'd like to add?"
+
+  utter_goodbye:
+    - text: "Very well. Your summary report is being generated. Your healthcare provider could review it and will be in touch if anything requires further discussion. Thank you!"
+
+  utter_iamabot:
+    - text: "I am a bot, powered by Rasa."
+
+actions:
+  - action_set_name
+  - action_form_sentence
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
