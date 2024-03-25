@@ -7,12 +7,16 @@ intents:
   - provide_temperature
   - provide_blood_pressure
   - provide_glucose_level
+  - provide_blood_group
+  - provide_symptoms
+  - provide_symptoms_change
   - provide_medical_history
   - provide_medications
   - provide_allergies
   - provide_family_history
   - provide_smoking
   - provide_alcohol_consumption
+  - provide_daily_diet
   - provide_daily_habits
   - provide_sleep
   - provide_stress
@@ -30,22 +34,22 @@ slots:
     type: text
     influence_conversation: false
     mappings:
-    - type: custom
+      - type: custom
 
 # forms:
 
 responses:
   utter_greet:
     - text: "Hi {name}! I'm Dr. Assist, your virtual medical assistant. I'm here to help gather some information to give your healthcare provider a good starting point."
-
+  # ---------------------------------------DEMOGRAPHICS--------------------------------------------------------------------------------
   utter_height:
     - text: "To get things started, could you tell me your height? (in cm)"
 
   utter_weight:
-    - text: "Thank you. And what is your current weight?"
+    - text: "Thank you. And what is your current weight? (in kg)"
 
   utter_temperature:
-    - text: "Got it. Could you please take your temperature and tell me the reading?"
+    - text: "Got it.If possible, could you please take your temperature and tell me the reading?"
 
   utter_blood_pressure:
     - text: "Now, if you have a blood pressure cuff, please use it and let me know your systolic and diastolic readings. If you don't have one, that's okay."
@@ -53,8 +57,15 @@ responses:
   utter_glucose_level:
     - text: "Do you have a glucose meter? If so, please take your glucose reading and let me know the result. If you don't have one, that's okay."
 
-  utter_medical_history:
-    - text: "Thanks! Now let's shift to your medical history. Have you had any significant illnesses or surgeries in the past?"
+  utter_blood_group:
+    - text: "What is your blood group?"
+  # ---------------------------------------symptoms,medications & allergies--------------------------------------------------------------------------------
+
+  utter_symptoms:
+    - text: "Can you describe the symptoms or difficulties that you've been having?"
+
+  utter_symptoms_change:
+    - text: "Could you describe how your symptoms have changed since they started? Are they getting better, worse, or staying about the same?"
 
   utter_medications:
     - text: "Okay. Are you currently taking any medications, either prescription or over-the-counter?"
@@ -62,26 +73,41 @@ responses:
   utter_allergies:
     - text: "Thanks for letting me know. Are there any other allergies you'd like me to note down (medications, foods, anything else)?"
 
+  # ---------------------------------------HISTORY--------------------------------------------------------------------------------
+
+  utter_ask_medical_history:
+    - text: "To give you the best advice, can I ask you a few questions about your health history?"
+
+  utter_medical_history:
+    - text: " Have you had any significant illnesses or surgeries in the past?"
+
   utter_family_history:
     - text: " Does anyone in your immediate family have a history of heart disease, diabetes, or any other chronic conditions?"
+  # ---------------------------------------LIFESTYLE--------------------------------------------------------------------------------
+
+  utter_ask_lifestyle:
+    - text: "Would you like to answer some questions about your lifestyle and habits?"
 
   utter_smoking:
-    - text: "I'll make a note of that. Now, let's talk about your daily habits. Do you smoke?"
+    - text: "Do you smoke or use any tobacco products?"
 
   utter_alcohol_consumption:
     - text: "How about alcohol consumption?"
 
+  utter_daily_diet:
+    - text: "Got it. Could you describe your typical daily diet? Do you have any dietary restrictions or preferences"
+
   utter_daily_habits:
-    - text: "Got it. Could you walk me through what you usually eat in a day and how much physical activity you typically get?"
+    - text: "Do you have any other habits that you think are important for me to know about and  how much physical activity you typically get??"
 
   utter_sleep:
     - text: "Is your sleep generally good, or do you have trouble sleeping?"
 
   utter_stress:
     - text: "Would you say you experience stress often? If so, what are some things that tend to stress you out?"
-
+  # ---------------------------------------SOCIO-ECONOMIC-STATUS--------------------------------------------------------------------------------
   utter_education_living:
-    - text: "To understand your health picture more comprehensively, it would be helpful if you could share your highest level of education and describe your general living situation. This information can help identify any social determinants of health that may be relevant to your care. Of course, all your answers are confidential."
+    - text: "To understand your health picture more comprehensively,it would be helpful if you could share your education level and living situation? This information can help identify any social determinants of health that may be relevant to your care.If you prefer not to answer, that's perfectly fine."
 
   utter_additional_info:
     - text: " I'm going to compile this information into a summary for your healthcare provider. Is there anything else you'd like to add?"
@@ -92,9 +118,13 @@ responses:
   utter_iamabot:
     - text: "I am a bot, powered by Rasa."
 
+  # utter_please_rephrase:
+  #   - text: I'm sorry, I didn't quite understand that. Could you rephrase?
+
 actions:
   - action_set_name
-  - action_form_sentence
+  - action_default_fallback
+  - action_end_session
 
 session_config:
   session_expiration_time: 60

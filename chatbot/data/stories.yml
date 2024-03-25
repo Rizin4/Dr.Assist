@@ -1,79 +1,340 @@
 version: "3.1"
 
 stories:
-    - story: path one
-      steps:
-          - intent: greet
-          - action: action_set_name
-          - action: utter_greet
+        - story: ALL PATHS
+          steps:
+                  - intent: greet
+                  - action: action_set_name
+                  - action: utter_greet
+                  # ----------------------DEMOGRAPHICS--------------------------------
+                  - action: utter_height
+                  - intent: provide_height
 
-          - action: utter_height
-          - intent: provide_height
-          - action: action_form_sentence
+                  - action: utter_weight
+                  - intent: provide_weight
 
-          - action: utter_weight
-          - intent: provide_weight
-          - action: action_form_sentence
+                  - action: utter_temperature
+                  - or:
+                            - intent: deny
+                            - intent: provide_temperature
 
-          - action: utter_temperature
-          - intent: provide_temperature
-          - action: action_form_sentence
+                  - action: utter_blood_pressure
+                  - or:
+                            - intent: deny
+                            - intent: provide_blood_pressure
 
-          - action: utter_blood_pressure
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_blood_pressure
+                  - action: utter_glucose_level
+                  - or:
+                            - intent: deny
+                            - intent: provide_glucose_level
 
-          - action: utter_glucose_level
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_glucose_level
+                  - action: utter_blood_group
+                  - intent: provide_blood_group
+                  # ---------------------------------------symptoms,medications & allergies--------------------------------------------------------------------------------
+                  - action: utter_symptoms
+                  - intent: provide_symptoms
 
-          - action: utter_medical_history
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_medical_history
-          - action: utter_medications
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_medications
-          - action: utter_allergies
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_allergies
-          - action: utter_family_history
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_family_history
-          - action: utter_smoking
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_smoking
-          - action: utter_alcohol_consumption
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_alcohol_consumption
-          - action: utter_daily_habits
-          - intent: provide_daily_habits
-          - action: utter_sleep
-          - intent: provide_sleep
-          - action: utter_stress
-          - or:
-                - intent: deny
-                - intent: affirm
-                - intent: provide_stress
-          - action: utter_education_living
-          - intent: provide_education_living
-          - action: utter_additional_info
-          - intent: provide_additional_info
+                  - action: utter_symptoms_change
+                  - intent: provide_symptoms_change
 
-          - intent: goodbye
-          - action: utter_goodbye
+                  - action: utter_medications
+                  - or:
+                            - intent: deny
+                            - intent: provide_medications
+                  - action: utter_allergies
+                  - or:
+                            - intent: deny
+                            - intent: provide_allergies
+                  # ---------------------------------------HISTORY--------------------------------------------------------------------------------
+                  - action: utter_ask_medical_history
+                  - intent: affirm
+
+                  - action: utter_medical_history
+                  - or:
+                            - intent: deny
+                            - intent: provide_medical_history
+
+                  - action: utter_family_history
+                  - or:
+                            - intent: deny
+                            - intent: provide_family_history
+                  # ----------------------LIFESTYLE--------------------------------
+                  - action: utter_ask_lifestyle
+                  - intent: affirm
+
+                  - action: utter_smoking
+                  - or:
+                            - intent: deny
+                            - intent: affirm
+                            - intent: provide_smoking
+                  - action: utter_alcohol_consumption
+                  - or:
+                            - intent: deny
+                            - intent: affirm
+                            - intent: provide_alcohol_consumption
+
+                  - action: utter_daily_diet
+                  - intent: provide_daily_diet
+
+                  - action: utter_daily_habits
+                  - intent: provide_daily_habits
+
+                  - action: utter_sleep
+                  - intent: provide_sleep
+
+                  - action: utter_stress
+                  - or:
+                            - intent: deny
+                            - intent: affirm
+                            - intent: provide_stress
+
+                  # -----------------------------------------SOCIO-ECONOMIC-STATUS-------------------------------------------------------
+                  - action: utter_education_living
+                  - or:
+                            - intent: deny
+                            - intent: provide_education_living
+
+                  - action: utter_additional_info
+                  - or:
+                            - intent: deny
+                            - intent: provide_additional_info
+
+                  - action: utter_goodbye
+                  - action: action_end_session
+
+        # -----------------------------------------STORY:  NO HISTORY-------------------------------------------------------
+
+        - story: NO HISTORY
+          steps:
+                  - intent: greet
+                  - action: action_set_name
+                  - action: utter_greet
+                  # ----------------------DEMOGRAPHICS--------------------------------
+                  - action: utter_height
+                  - intent: provide_height
+
+                  - action: utter_weight
+                  - intent: provide_weight
+
+                  - action: utter_temperature
+                  - or:
+                            - intent: deny
+                            - intent: provide_temperature
+
+                  - action: utter_blood_pressure
+                  - or:
+                            - intent: deny
+                            - intent: provide_blood_pressure
+
+                  - action: utter_glucose_level
+                  - or:
+                            - intent: deny
+                            - intent: provide_glucose_level
+
+                  - action: utter_blood_group
+                  - intent: provide_blood_group
+                  # ---------------------------------------symptoms,medications & allergies--------------------------------------------------------------------------------
+                  - action: utter_symptoms
+                  - intent: provide_symptoms
+
+                  - action: utter_symptoms_change
+                  - intent: provide_symptoms_change
+
+                  - action: utter_medications
+                  - or:
+                            - intent: deny
+                            - intent: provide_medications
+                  - action: utter_allergies
+                  - or:
+                            - intent: deny
+                            - intent: provide_allergies
+                  # ---------------------------------------HISTORY--------------------------------------------------------------------------------
+                  - action: utter_ask_medical_history
+                  - intent: deny
+
+                  # ----------------------LIFESTYLE--------------------------------
+                  - action: utter_ask_lifestyle
+                  - intent: affirm
+
+                  - action: utter_smoking
+                  - or:
+                            - intent: deny
+                            - intent: affirm
+                            - intent: provide_smoking
+                  - action: utter_alcohol_consumption
+                  - or:
+                            - intent: deny
+                            - intent: affirm
+                            - intent: provide_alcohol_consumption
+
+                  - action: utter_daily_diet
+                  - intent: provide_daily_diet
+
+                  - action: utter_daily_habits
+                  - intent: provide_daily_habits
+
+                  - action: utter_sleep
+                  - intent: provide_sleep
+
+                  - action: utter_stress
+                  - or:
+                            - intent: deny
+                            - intent: affirm
+                            - intent: provide_stress
+
+                  # -----------------------------------------SOCIO-ECONOMIC-STATUS-------------------------------------------------------
+                  - action: utter_education_living
+                  - or:
+                            - intent: deny
+                            - intent: provide_education_living
+
+                  - action: utter_additional_info
+                  - or:
+                            - intent: deny
+                            - intent: provide_additional_info
+
+                  - action: utter_goodbye
+                  - action: action_end_session
+
+        # -----------------------------------------STORY:  NO LIFESTYLE-------------------------------------------------------
+
+        - story: NO LIFESTYLE
+          steps:
+                  - intent: greet
+                  - action: action_set_name
+                  - action: utter_greet
+                  # ----------------------DEMOGRAPHICS--------------------------------
+                  - action: utter_height
+                  - intent: provide_height
+
+                  - action: utter_weight
+                  - intent: provide_weight
+
+                  - action: utter_temperature
+                  - or:
+                            - intent: deny
+                            - intent: provide_temperature
+
+                  - action: utter_blood_pressure
+                  - or:
+                            - intent: deny
+                            - intent: provide_blood_pressure
+
+                  - action: utter_glucose_level
+                  - or:
+                            - intent: deny
+                            - intent: provide_glucose_level
+
+                  - action: utter_blood_group
+                  - intent: provide_blood_group
+                  # ---------------------------------------symptoms,medications & allergies--------------------------------------------------------------------------------
+                  - action: utter_symptoms
+                  - intent: provide_symptoms
+
+                  - action: utter_symptoms_change
+                  - intent: provide_symptoms_change
+
+                  - action: utter_medications
+                  - or:
+                            - intent: deny
+                            - intent: provide_medications
+                  - action: utter_allergies
+                  - or:
+                            - intent: deny
+                            - intent: provide_allergies
+                  # ---------------------------------------HISTORY--------------------------------------------------------------------------------
+                  - action: utter_ask_medical_history
+                  - intent: affirm
+
+                  - action: utter_medical_history
+                  - or:
+                            - intent: deny
+                            - intent: provide_medical_history
+
+                  - action: utter_family_history
+                  - or:
+                            - intent: deny
+                            - intent: provide_family_history
+                  # ----------------------LIFESTYLE--------------------------------
+                  - action: utter_ask_lifestyle
+                  - intent: deny
+
+                  # -----------------------------------------SOCIO-ECONOMIC-STATUS-------------------------------------------------------
+                  - action: utter_education_living
+                  - or:
+                            - intent: deny
+                            - intent: provide_education_living
+
+                  - action: utter_additional_info
+                  - or:
+                            - intent: deny
+                            - intent: provide_additional_info
+
+                  - action: utter_goodbye
+                  - action: action_end_session
+        # -----------------------------------------STORY:  NO LIFESTYLE & HISTORY-------------------------------------------------------
+
+        - story: NO LIFESTYLE AND HISTORY
+          steps:
+                  - intent: greet
+                  - action: action_set_name
+                  - action: utter_greet
+                  # ----------------------DEMOGRAPHICS--------------------------------
+                  - action: utter_height
+                  - intent: provide_height
+
+                  - action: utter_weight
+                  - intent: provide_weight
+
+                  - action: utter_temperature
+                  - or:
+                            - intent: deny
+                            - intent: provide_temperature
+
+                  - action: utter_blood_pressure
+                  - or:
+                            - intent: deny
+                            - intent: provide_blood_pressure
+
+                  - action: utter_glucose_level
+                  - or:
+                            - intent: deny
+                            - intent: provide_glucose_level
+
+                  - action: utter_blood_group
+                  - intent: provide_blood_group
+                  # ---------------------------------------symptoms,medications & allergies--------------------------------------------------------------------------------
+                  - action: utter_symptoms
+                  - intent: provide_symptoms
+
+                  - action: utter_symptoms_change
+                  - intent: provide_symptoms_change
+
+                  - action: utter_medications
+                  - or:
+                            - intent: deny
+                            - intent: provide_medications
+                  - action: utter_allergies
+                  - or:
+                            - intent: deny
+                            - intent: provide_allergies
+                  # ---------------------------------------HISTORY--------------------------------------------------------------------------------
+                  - action: utter_ask_medical_history
+                  - intent: deny
+                  # ----------------------LIFESTYLE--------------------------------
+                  - action: utter_ask_lifestyle
+                  - intent: deny
+
+                  # -----------------------------------------SOCIO-ECONOMIC-STATUS-------------------------------------------------------
+                  - action: utter_education_living
+                  - or:
+                            - intent: deny
+                            - intent: provide_education_living
+
+                  - action: utter_additional_info
+                  - or:
+                            - intent: deny
+                            - intent: provide_additional_info
+
+                  - action: utter_goodbye
+                  - action: action_end_session

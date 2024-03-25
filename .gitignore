@@ -140,7 +140,12 @@ cython_debug/
 # Dr.Assist
 /.venv
 /rasaenv
-/.rasa
+/chatbot/.rasa
 /chatbot/models/
 /chatbot/logs/
 /chatbot/actions/__pycache__
+
+# mitie NLP word emdbeddings
+/chatbot/data/total_word_feature_extractor.dat 
+/chatbot/actions/tracker_events.json
+*.html

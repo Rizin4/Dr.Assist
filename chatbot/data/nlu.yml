@@ -24,6 +24,10 @@ nlu:
       - 6 feet
       - 180 centimeters
       - 5'7"
+      - 170
+      - 5 7
+      - 5.7
+      - 183
 
   - intent: provide_weight
     examples: |
@@ -31,6 +35,8 @@ nlu:
       - My weight is 150 pounds
       - 80 kilograms
       - 160 lbs
+      - 72 
+      - 25
 
   - intent: provide_temperature
     examples: |
@@ -39,11 +45,19 @@ nlu:
       - 37.5 degrees Celsius
       - 100.4 F
       - 38 C
+      - 99.2
+      - 37.8
+      - 29
+      - 101
 
   - intent: provide_blood_pressure
     examples: |
       - My blood pressure is 120 over 80
       - 130/85
+      - 140 over 90
+      - 120,80
+      - 130 85
+      - 140.90
       - Blood pressure is 140/90
 
   - intent: provide_glucose_level
@@ -52,15 +66,185 @@ nlu:
       - Blood sugar is 5.5 mmol/L
       - 120 mg/dL
       - 6.7 mmol/L
+      - 90
+
+  - intent: provide_blood_group
+    examples: |
+      - My blood group is A+
+      - I have O negative blood
+      - AB positive
+      - I'm B negative
+      - I have A negative blood type
+      - I'm O positive
+      - I have AB negative blood
+      - A positive
+      - I have B positive blood
+      - I'm O negative
+      - I have A positive blood type
+      - I'm AB negative
+      - I have B negative blood
+      - A negative
+      - I have O positive blood
+      - I'm B positive
+      - I have AB positive blood
+      - A+ve
+      - B-ve
+      - AB+
+      - O-
+      - AB -ve
+      - A +ve
+      - B -ve
+
+  - intent: provide_symptoms
+    examples: |
+      - I have a headache
+      - I'm feeling nauseous
+      - cough
+      - headeache, cough, cold 
+      - I have a sore throat
+      - fever
+      - fever,cough and cold,runny nose
+      - cough,runny nose and fever
+      - caught a fever last monday and it's been getting worse
+      - rash
+      - This cough started last Tuesday, and it's been getting worse every day.
+      - I've had this headache since Thursday, and nothing seems to make it better.
+      - My stomach has been feeling off since Sunday, and now I have diarrhea too.
+      - I woke up with a sore throat on Monday, and it's only gotten worse as the week went on.
+      - I started feeling feverish on Wednesday, and my temperature has been steadily climbing.
+      - The chills and body aches hit me hard on Friday, and I've had a fever ever since.
+      - My back pain flared up on Sunday, and it's been unbearable ever since.
+      - This sharp pain in my side started yesterday, and it hasn't let up at all.
+      - The rash first appeared on my arm last Wednesday, and now it's spread to my legs.
+      - I noticed a small bump on Monday, and by Wednesday it had turned into a painful blister. 
+      - sharp pain in my lower right abdomen that's been getting worse over the past few hours.
+      - runny nose
+      - backache
+      - I have a toothache
+      - I get these headaches almost every day
+      - I've been coughing up thick, yellow mucus for the past three days
+      - I have a sore shoulder
+      - The pain is so bad I can barely move
+      - sore wrist
+      - I keep feeling dizzy and lightheaded, especially when I stand up quickly
+      - I have a sore hip
+      - sore neck
+      - I've been feeling really run down and exhausted lately.
+      - sore hand
+      - My stomach has been bothering me on and off for a while now
+      - sore toe
+      - I just don't feel like myself
+      - sore heel
+      - This fatigue is making me feel really down
+      - I have a wound on the back of my neck that started producing pus. This has been going on for a week now.
+      - I cut my finger pretty badly on a broken glass. It's bleeding a lot and won't seem to stop.
+      - I have this wound on my leg that's getting redder, and it feels hot to the touch.
+      - I fell while hiking and got a deep scrape on my knee. It's really painful.
+      - This cut on my arm isn't healing properly, and it seems to be getting bigger.
+      - wound that's oozing this yellowish liquid, and it smells kind of funny.
+      - My cat scratched me, and the area is swollen and really red.
+      - I got these scratches on my arms from working in the garden. They're itchy and burning.
+      - I don't know where these scratches came from. They just appeared on my legs.
+      - I have this bumpy, red rash all over my chest and back. It's spreading.
+      - There's a rash on my arm that's really itchy and feels scaly.
+      - I developed this strange, circular rash after going on a hike last week.
+      - I have a rash under my armpit that's red, sore, and won't go away.
+      - My skin is so itchy I can't stop scratching. It's driving me crazy!
+      - I have this itchy spot on my leg, and the more I scratch, the worse it gets.
+      - My scalp is really itchy, and I think there might be some bumps too.
+      - My whole body feels itchy, especially at night.
+      - I got a cut, and now the area around it is red, swollen, and itchy.
+      - I have a rash that's also really itchy and seems to be getting infected.
+      - This scratch turned into a weird blister that's filled with pus.
+      - My skin is so dry and itchy that it's starting to crack and bleed in some places.
+      - The pain in my lower right abdomen started out mild, but it's been getting steadily worse over the past few hours.
+      - I've been feeling nauseous and lightheaded all morning, and I actually threw up a couple of times.
+      - My cough started as just a tickle in my throat, but now it's deep and hurts my chest. 
+      - This sore throat came on suddenly yesterday, and it's so bad it hurts to swallow.
+      - The fever seemed to come out of nowhere, and I've been feeling chills and body aches too.
+      - I noticed this rash on my arm a few days ago, and it's getting bigger and itchier.
+      - This headache is really pounding, and it's making me sensitive to light and sound.
+      - My stomach has been upset for a few days now, with cramps and diarrhea.
+      - I've been feeling really tired and weak lately, and it seems to be getting worse.
+      - This dizziness comes and goes, and it's especially bad when I stand up too quickly.
+      - I woke up with a stiff neck this morning, and the pain is getting worse throughout the day.
+      - The cut on my finger is bleeding a lot, and it doesn't seem to be slowing down even with pressure.
+      - This wound on my leg isn't healing, and it's actually starting to look infected, it's red, swollen, and warm to the touch.
+      - I think I might have sprained my ankle. It's swollen, painful, and I can barely put weight on it.
+      - The rash on my back is really itchy and bumpy, and now it seems to be spreading to my arms. 
+      - i have been feeling really run down and exhausted lately, and I'm not sure why.
+      - i have been having a cough for a few days now, and it's getting worse.
+      - i have been feeling really nauseous and dizzy, especially in the mornings.
+      - i had a wound on my arm that's been oozing pus and won't heal.
+      - had cough and cold for a week now
+
+  - intent: provide_symptoms_change
+    examples: |
+      - pain has been getting worse over the past few hours
+      - no change
+      - staying the same 
+      - almost gone
+      - almost the same
+      - getting worse
+      - getting better
+      - ough is getting better
+      - The rash is spreading
+      - fever is going down
+      - sore throat is getting worse
+      - The headache is getting worse
+      - nausea is getting better
+      - runny nose is getting worse
+      - backache is getting better
+      - toothache is getting worse
+      -  dizziness is getting better
+      - shoulder pain is getting worse
+      - wrist pain is getting better
+      - hip pain is getting worse
+      - neck pain is getting better
+      - The hand pain is getting worse
+      - stomach pain is getting better
+      - toe pain is getting worse
+      - heel pain is getting better
+      - fatigue is getting worse
+      - cough is getting worse
+      - The rash is getting worse
+      - fever is getting worse
+      - The sore throat is getting better
+      - headache is getting better
+      - nausea is getting worse
+      - runny nose is getting better
+      - The backache is getting worse
+      - toothache is getting better
+      - The dizziness is getting worse
+      - shoulder pain is getting better
+      - The wrist pain is getting worse
+      - hip pain is getting better
+      - neck pain is getting worse
+      - The hand pain is getting better
+      - stomach pain is getting worse
+      - The toe pain is getting better
+      - heel pain is getting worse
+      - fatigue is getting better
 
   - intent: provide_medical_history
     examples: |
       - I have a history of diabetes
       - I've had a heart attack
-      - I was diagnosed with cancer
+      - was diagnosed with cancer
       - I had surgery for appendicitis
       - I had a knee replacement
-      - I was diagnosed with asthma as a child
+      - was diagnosed with asthma as a child
+      - My family has a history of Alzheimer's disease
+      - have a genetic condition called cystic fibrosis
+      - had a stroke a few years ago
+      - I've been diagnosed with multiple sclerosis
+      - have a history of high blood pressure
+      - I had a liver transplant
+      - I have been treated for depression in the past
+      - I have a history of migraines
+      - I've had a kidney stone
+      - had lip surgery for a blocked salivary gland duct
+      - appendix removal surgery
 
   - intent: provide_medications
     examples: |
@@ -70,55 +254,210 @@ nlu:
       - I take a multivitamin every day
       - used to take medication for high cholesterol
       - used to take medication for depression
+      -take medication for anxiety
+      -have been taking paracetamol for the pain
+      -take medication for acid reflux
+      - took cetrcizine for the allergy
+      - I take medication for my thyroid
+      - To manage my diabetes, I take insulin.
+      - I'm currently on medication to control my blood pressure.
+      - Allergies are a pain, so I usually have allergy medication on hand. 
+      - Taking a daily multivitamin is part of my routine.
+      - I don't need medication for high cholesterol anymore.
+      - My doctor prescribed medication to help with my depression in the past.
+      - Medication helps me manage my anxiety.
+      - Paracetamol has been my go-to for pain relief lately.
+      - Acid reflux is annoying, but I have medication to control it.
+      - For my recent allergy flare-up, I took cetirizine.
+      - I have to take medication to keep my thyroid in check.
+      - Paracetamol is what I usually reach for when I have a headache. 
+      - I rely on Acetaminophen when my muscles are sore.
+      - If I feel inflammation, I might take some Ibuprofen.
+      - Aspirin is my old-school remedy for colds.
+      - Last month's infection meant I had to take a course of antibiotics.
+      - Amoxicillin cleared up my infection quickly.
+      - My doctor gave me Azithromycin for a stubborn chest infection. 
+      - A course of Cephalexin helped me get rid of that skin infection.
+      - When my indigestion acts up, I take antacids.
+      - For the occasional heartburn, I find Sodium Bicarbonate (baking soda) does the trick.
+      - Ranitidine is my go-to for controlling my acid reflux.
+      - When my acid reflux was really bad, Omeprazole was a lifesaver.
+      - During allergy season, I can't live without allergy medications like Loratadine. 
+      - Cetirizine is my favorite for when my allergies get out of control.
+      - I make sure to take Vitamin D for my bone health.
+      - My doctor recommended iron supplements to help with my anemia.
+      - I'd like to explore ayurvedic options for stress management.
+      - I'm curious if homeopathic remedies could help with colds.
+      - I've been thinking about trying herbal supplements for my digestion.
+      - I'm interested in trying acupuncture for my chronic pain.
+      - I've heard good things about chiropractic care for back pain.
+      - considering massage therapy for my muscle tension.
+      - I'm looking into aromatherapy for stress relief.
+      - homeo medicines for fever
 
   - intent: provide_allergies
     examples: |
-      - I'm allergic to peanuts
-      - I have a shellfish allergy
-      - I'm allergic to penicillin
-      - problem with pollen
+      - I'm allergic to peanuts.
+      - I have a severe shellfish allergy.
+      - allergic to penicillin.
+      - Pollen gives me terrible seasonal allergies.
+      -can't eat strawberries, they make me break out in hives.
+      - I have a bad reaction to bee stings.
+      - Pet dander really irritates my allergies. 
+      - I'm allergic to latex.
+      - I have a medication allergy to sulfa drugs.
+      -had a severe allergic reaction to ranitidine.  
+      - Ranitidine causes me to have allergy symptoms. 
+      -need to avoid ranitidine because I'm allergic.
+      - I'm highly allergic to dust mites.
+      - Grass pollen triggers my allergies.
+      - I have an allergy to mold spores.
+      - allergic to certain types of nuts.
+      - I have an allergy to cat dander.
+      - I'm allergic to certain types of fish.
+      - I have a sensitivity to fragrances.
+      - allergic to certain types of flowers.
+      - allergy to insect bites.
+      - I'm allergic to certain types of medication.
 
   - intent: provide_family_history
     examples: |
       - My father had heart disease
-      - My mother has diabetes
+      - mother has diabetes
       - Cancer runs in my family
+      - grandfather had Alzheimer's disease
+      - aunt had breast cancer
+      - My uncle had lung cancer
+      - sister has asthma
+      - cousin has epilepsy
+      - grandmother had a stroke
+      - brother has multiple sclerosis
+      - My father had high blood pressure
+      - one of my family menmebr had steatosystoma
+      - father aunt had breast cancer
 
   - intent: provide_smoking
     examples: |
-      - I smoke a pack a day
-      - I quit smoking years ago
+      - smoke a pack a day
+      - quit smoking years ago
       - I've never smoked
+      - used to smoke occasionally
+      - I'm trying to quit smoking
+      - only smoke when I'm stressed
+      - smoke socially when I'm with friends
+      - I've been smoking for many years
+      - smoke cigars occasionally
+      - I'm a heavy smoker
+      - light smoker
+      - I'm a former smoker
+      - i dont smoke
+      - nah dont smoke
+      - usually dont smoke
+      - I'm a chain smoker
 
   - intent: provide_alcohol_consumption
     examples: |
-      - I drink a glass of wine with dinner
-      - I don't drink alcohol
+      - drink a glass of wine with dinner
+      - don't drink alcohol
       - I occasionally have a beer
+      - On special occasions, I enjoy a cocktail or two.
+      - used to drink heavily in the past, but now I'm completely sober.
+      - only drink socially when I'm out with friends.
+      - have a few drinks every weekend to unwind.
+      - I'm a wine enthusiast and enjoy trying different varieties.
+      - I'm a beer connoisseur and love exploring craft breweries.
+      - teetotaler and have never consumed alcohol in my life.
+      - used to have a drinking problem, but I've been in recovery for several years now.
+      - I'm a moderate drinker and usually have a glass of wine or a beer with dinner.
+
+  - intent: provide_daily_diet
+    examples: |
+      - I eat a balanced diet
+      - For lunch, I usually have a salad with a variety of vegetables, lean protein, and a side of whole grains to maintain a nutritious and balanced diet.
+      - On weekends, I like to try new healthy recipes.
+      - make sure to include a variety of fruits and vegetables in my meals to get essential vitamins and minerals.
+      - I avoid processed foods and opt for whole, natural ingredients whenever possible to support my overall health and well-being.
+      - I believe that a healthy diet is the foundation of a strong immune system and overall well-being, so I prioritize making nutritious food choices every day.
+      - I enjoy cooking and experimenting with different ingredients to create flavorful and healthy meals that nourish my body and mind.
+      - I try to limit my intake of sugary snacks and desserts and opt for healthier alternatives like fresh fruit or yogurt to satisfy my sweet tooth.
+      - I follow a vegetarian diet and avoid meat and dairy products for ethical and health reasons.
+      - non-vegetarian and include a variety of lean proteins like chicken, fish, and eggs in my meals to support muscle growth and repair.
 
   - intent: provide_daily_habits
     examples: |
       - I exercise every day
       - I walk to work
-      - I eat a balanced diet
+      - In the morning, I wake up early and go for a 30-minute jog followed by a yoga session to start my day on a healthy note.
+      - As part of my daily routine, I make sure to take the stairs instead of the elevator whenever possible to incorporate more physical activity into my lifestyle.
+      - In the evenings, I enjoy going for a long walk in the park to unwind and clear my mind after a busy day at work.
+      - experiment with different types of exercises like cycling or swimming to keep my fitness routine interesting and enjoyable.
+      - I also make it a point to stay hydrated throughout the day by drinking plenty of water and limiting my intake of sugary beverages.
+      - In addition to physical exercise, I practice mindfulness and meditation techniques to manage stress and promote overall well-being.
+      - I believe that maintaining a healthy lifestyle is essential for both my physical and mental health, and I strive to make conscious choices that support my well-being on a daily basis.
 
   - intent: provide_sleep
     examples: |
       - I sleep 8 hours a night
       - I have trouble sleeping
+      - As a part of my commitment to a healthy lifestyle, I prioritize getting enough sleep by establishing a consistent bedtime routine and aiming for 7-8 hours of quality sleep every night.
       - I usually get 6 hours of sleep
+      - Due to my work schedule, I often struggle to get enough sleep and end up only getting around 4-5 hours of sleep per night.
+      - I have insomnia and find it extremely difficult to fall asleep, often lying awake for hours before finally drifting off.
+      - My sleep patterns are irregular, sometimes I sleep for 10 hours straight and other times I can only manage 3-4 hours of sleep.
+      - I suffer from sleep apnea, a condition that causes me to frequently wake up throughout the night due to breathing difficulties.
+      - I have a newborn baby at home, so my sleep is constantly interrupted and I only manage to get short naps throughout the day.
+      - I have a demanding job that requires me to work late nights, resulting in me getting very little sleep on a regular basis.
+      - I struggle with restless leg syndrome, a condition that causes uncomfortable sensations in my legs and makes it hard for me to fall asleep.
+      - I often experience vivid nightmares that disrupt my sleep and leave me feeling exhausted in the morning.
+      - I have tried various sleep aids and techniques, but nothing seems to help me get a good night's sleep consistently.
 
   - intent: provide_stress
     examples: |
       - I've been feeling stressed lately
       - I'm under a lot of pressure at work
       - I try to manage my stress with meditation
+      - The constant demands and deadlines at my job have been causing me a great deal of stress, to the point where I often feel overwhelmed and exhausted.
+      - I've been juggling multiple responsibilities and it's taking a toll on my mental well-being. I find myself constantly worrying and feeling anxious about meeting everyone's expectations.
+      - The ongoing conflicts and tension in my personal relationships have been adding to my stress levels. It's challenging to maintain a healthy work-life balance and it's affecting my overall happiness.
+      - I've been experiencing physical symptoms of stress, such as headaches, muscle tension, and difficulty sleeping. It's becoming increasingly difficult to focus and concentrate on tasks.
+      - The uncertainty and unpredictability of the current situation have been causing me a great deal of stress. I constantly worry about the future and the impact it will have on my career and personal life.
+      - I've tried various stress management techniques, such as deep breathing exercises and journaling, but I still find it challenging to cope with the overwhelming stressors in my life.
+      - The constant need to meet deadlines and achieve high performance standards at work has created a highly stressful environment. I often feel like I'm on edge and constantly under scrutiny.
+      - The lack of support and resources at my workplace has been contributing to my stress levels. I feel like I'm constantly trying to do more with limited resources, which adds to my frustration and stress.
+      - The long commute to work and the daily traffic congestion have been causing me significant stress. It's draining both physically and mentally, and it leaves me feeling exhausted before the workday even begins.
 
   - intent: provide_education_living
     examples: |
-      - I have a bachelor's degree
-      - I live in a city
-      - I'm a high school graduate and live in the countryside
+      - I have a bachelor's degree in Chemistry, Physics, and Mathematics.
+      - I hold an honors degree in Computer Science.
+      - I completed my B.Com (Bachelor of Commerce) degree.
+      - I graduated with a B.Tech (Bachelor of Technology) degree in Mechanical Engineering.
+      - I have an M.Tech (Master of Technology) degree in Electrical Engineering.
+      - obtained an M.Com (Master of Commerce) degree.
+      - I completed my MBA (Master of Business Administration) with a specialization in Marketing.
+      - I have a BBA (Bachelor of Business Administration) degree.
+      - studied Computer Science in college.
+      - I have a degree in Architecture.
+      - completed a diploma in Graphic Design.
+      - finished my 12th class with a focus on Science subjects.
+      - have a 10th class certificate.
+      - I studied Agriculture in college.
+      - I am a certified mechanic.
+      - I am a licensed electrician.
+      - I worked as a professor at a university.
+      - I have experience as a teacher in a high school.
+      - I hold a Bachelor's degree in Computer Science and Engineering.
+      - I completed a diploma in Civil Engineering.
+      - I have a degree in Economics.
+      - I studied Psychology in college.
+      - I have a Master's degree in English Literature.
+      - I completed my Ph.D. in Physics.
+      - I have a degree in Mathematics Education.
+      - holds a Bachelor's degree in Fine Arts.
+      - studied History in college.
+      - I have a degree in Political Science.
+      - completd my Bachelor's degree in Hotel Management.
+      - I have a diploma in Culinary Arts.
 
   - intent: provide_additional_info
     examples: |
@@ -169,7 +508,6 @@ nlu:
       - Prove you're not a bot
       - You're a robot, right?
 
-
   - intent: affirm
     examples: |
       - yes
@@ -178,6 +516,9 @@ nlu:
       - of course
       - that sounds good
       - correct
+      - agree
+      - I agree
+      - I think so
 
   - intent: deny
     examples: |
@@ -188,4 +529,14 @@ nlu:
       - don't like that
       - no way
       - not really
-
+      - nope
+      - negative
+      - I don't agree
+      - I disagree
+      - I don't think so
+      - I'm not sure
+      - not sure about that
+      - I'm not sure I agree
+      - not sure I understand
+      - n
+      - nil
