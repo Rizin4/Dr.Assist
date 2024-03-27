@@ -121,8 +121,3 @@ class ActionEndSession(Action):
 
         print(conversation_data)
         return [ConversationPaused()]
-
-    # def intentFromAction(self, action_name):
-    #     for action_name in actions_to_track:
-    #         intent_name = "provide_" + action_name[6:]
-    #     return action_name.split("_")[1]
