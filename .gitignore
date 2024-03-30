@@ -148,7 +148,7 @@ cython_debug/
 # mitie NLP word emdbeddings
 /chatbot/data/total_word_feature_extractor.dat 
 /chatbot/actions/tracker_events.json
-*.html
+
 
 # dependencies
 /node_modules
