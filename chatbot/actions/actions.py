@@ -2,7 +2,6 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, UserUtteranceReverted, ConversationPaused
-import json
 
 
 class ActionNameFetch(Action):
@@ -97,7 +96,6 @@ class ActionEndSession(Action):
         flag = True
         question = ""
         answer = ""
-        # Derive intent from action
         for event in tracker.events:
             if (
                 event.get("event") == "bot"
@@ -107,15 +105,14 @@ class ActionEndSession(Action):
                 if event.get("text"):
                     question = event.get("text")
                     flag = False
-
             elif (
                 event.get("event") == "user"
                 and event.get("parse_data").get("intent").get("name")
                 in intents_to_track
                 and flag == False
             ):
-                answer = event.get("text", None)
-                if answer:
+                if event.get("text", None):
+                    answer = event.get("text", None)
                     conversation_data.append({question: answer})
                     flag = True
 

@@ -144,10 +144,13 @@ cython_debug/
 /chatbot/models/
 /chatbot/logs/
 /chatbot/actions/__pycache__
-
-# mitie NLP word emdbeddings
+/jwt_sample_server
+/run.sh
 /chatbot/data/total_word_feature_extractor.dat 
 /chatbot/actions/tracker_events.json
+/chatbot/graph.html
+/chatbot/chatbot.py
+/Frontend/frontend/package-lock.json
 
 
 # dependencies

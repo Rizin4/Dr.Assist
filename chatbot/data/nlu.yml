@@ -497,6 +497,22 @@ nlu:
       - see you around
       - bye bye
       - see you later
+      - goodnight
+      - good bye
+      - have a great day
+      - see you soon
+      - bye for now
+      - stop
+      - end
+      - quit
+      - exit
+      - goodbye for now
+      - catch you later
+      - gotta go
+      - see you next time
+      - see you tomorrow
+      - see you later alligator
+      - see you soon
 
   - intent: bot_challenge
     examples: |
@@ -519,6 +535,8 @@ nlu:
       - agree
       - I agree
       - I think so
+      - ok
+      - okay
 
   - intent: deny
     examples: |
