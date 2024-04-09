@@ -1,6 +1,6 @@
 import React from "react";
 import './LoginSignup.css';
-import 'boxicons';
+import 'boxicons'
 import { Link } from "react-router-dom";
 
 const LoginSignup = () => {
@@ -14,8 +14,8 @@ const LoginSignup = () => {
         </div>
         <div className="nav-menu" id="navMenu">
             <ul>
-            <li><Link to="/" exact className="link">Home</Link></li>
-                <li><Link to="/UserInfo" className="link">User</Link></li>
+            <li><Link to="/UserHome" exact className="link">HomeUser</Link></li>
+                <li><Link to="/Navbar" className="link">navbarcheck</Link></li>
                 <li><Link to="/DoctorInfo" class="link">Doctor</Link></li>
                 <li><Link to="/Chat" class="link">Chat</Link></li>
             </ul>
