@@ -1,161 +1,164 @@
-import React from "react";
-import './LoginSignup.css';
-import 'boxicons'
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import {
+    Container,
+    Row,
+    Col,
+    Form,
+    Button,
+    InputGroup,
+    FormControl,
+    Nav,
+    Tab,
+} from 'react-bootstrap';
 
 const LoginSignup = () => {
-  return (
-    <div>
- <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-         <div className="wrapper">
-    <nav className="nav">
-        <div className="nav-logo">
-            <p>MedHUB .</p>
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Add login/signup logic here
+    };
+
+    const [activeTab, setActiveTab] = useState('login');
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+    };
+
+    return (
+        <div>
+            <Container className="p-3 my-5 d-flex flex-column w-50">
+                <Tab.Container activeKey={activeTab} onSelect={handleTabChange}>
+                    <Nav variant="pills" className="mb-3 d-flex flex-row justify-content-between">
+                        <Nav.Item>
+                            <Nav.Link eventKey="login">Login</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="register">Register</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+
+                    <Tab.Content>
+                        <Tab.Pane eventKey="login">
+                            <div className="text-center mb-3">
+                                <p>Sign in with:</p>
+
+                                <div className="d-flex justify-content-between mx-auto" style={{ width: '40%' }}>
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-facebook-f"></i>
+                                    </Button>
+
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-twitter"></i>
+                                    </Button>
+
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-google"></i>
+                                    </Button>
+
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-github"></i>
+                                    </Button>
+                                </div>
+
+                                <p className="text-center mt-3">or:</p>
+                            </div>
+
+                            <Form>
+                                <Form.Group controlId="formEmail">
+                                    <Form.Label>Email address</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={handleEmailChange} />
+                                </Form.Group>
+
+                                <Form.Group controlId="formPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
+                                </Form.Group>
+
+                                <Form.Group controlId="formRememberMe" className="d-flex justify-content-between mx-4 mb-4">
+                                    <Form.Check type="checkbox" label="Remember me" />
+                                    <a href="!#">Forgot password?</a>
+                                </Form.Group>
+
+                                <Button variant="primary" type="submit" className="mb-4 w-100" onClick={handleSubmit}>
+                                    Sign in
+                                </Button>
+                                <p className="text-center">
+                                    Not a member? <a href="#!">Register</a>
+                                </p>
+                            </Form>
+                        </Tab.Pane>
+
+                        <Tab.Pane eventKey="register">
+                            <div className="text-center mb-3">
+                                <p>Sign up with:</p>
+
+                                <div className="d-flex justify-content-between mx-auto" style={{ width: '40%' }}>
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-facebook-f"></i>
+                                    </Button>
+
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-twitter"></i>
+                                    </Button>
+
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-google"></i>
+                                    </Button>
+
+                                    <Button variant="light" className="m-1" style={{ color: '#1266f1' }}>
+                                        <i className="fab fa-github"></i>
+                                    </Button>
+                                </div>
+
+                                <p className="text-center mt-3">or:</p>
+                            </div>
+
+                            <Form>
+                                <Form.Group controlId="formName">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter name" />
+                                </Form.Group>
+
+                                <Form.Group controlId="formUsername">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter username" />
+                                </Form.Group>
+
+                                <Form.Group controlId="formEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email" />
+                                </Form.Group>
+
+                                <Form.Group controlId="formPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" />
+                                </Form.Group>
+
+                                <Form.Group controlId="formTerms" className="d-flex justify-content-center mb-4">
+                                    <Form.Check type="checkbox" label="I have read and agree to the terms" />
+                                </Form.Group>
+
+                                <Button variant="primary" type="submit" className="mb-4 w-100">
+                                    Sign up
+                                </Button>
+                            </Form>
+                        </Tab.Pane>
+                    </Tab.Content>
+                </Tab.Container>
+            </Container>
         </div>
-        <div className="nav-menu" id="navMenu">
-            <ul>
-            <li><Link to="/UserHome" exact className="link">HomeUser</Link></li>
-                <li><Link to="/Navbar" className="link">navbarcheck</Link></li>
-                <li><Link to="/DoctorInfo" class="link">Doctor</Link></li>
-                <li><Link to="/Chat" class="link">Chat</Link></li>
-            </ul>
-        </div>
-        <div class="nav-button">
-            <button class="btn white-btn" id="loginBtn" onClick={login}>Sign In</button>
-                <button class="btn" id="registerBtn" onClick={register}>Sign Up</button>
-        </div>
-        <div class="nav-menu-btn">
-            <box-icon className="bx bx-menu" onClick={myMenuFunction}></box-icon> 
-        </div>
-    </nav>
+    );
+};
 
-{/* <!----------------------------- Form box ----------------------------------->     */}
-    <div class="form-box">
-        
-        {/* <!------------------- login form --------------------------> */}
-
-        <div class="login-container" id="login">
-            <div class="top">
-                <span>Don't have an account? <a href="#" onClick={register}>Sign Up</a></span>
-                <header>Login</header>
-            </div>
-            
-            <div class="input-box">
-                <input type="text" class="input-field" placeholder="Username or Email"/>
-                <box-icon class="bx bx-user"></box-icon >
-            </div>
-            <div class="input-box">
-                <input type="password" class="input-field" placeholder="Password"/>
-                <box-icon class="bx bx-lock-alt"></box-icon>
-            </div>
-            <div class="input-box">
-                <input type="submit" class="submit" value="Sign In"/> 
-             {/* <!------------------- logic to be implememented for login --------> */}
-
-            </div>
-            <div class="two-col">
-                <div class="one">
-                    <input type="checkbox" id="login-check"/>
-                    <label htmlFor="login-check"> Remember Me</label>
-                </div>
-                <div class="two">
-                    <label><a href="#">Forgot password?</a></label>
-                </div>
-            </div>
-        </div>
-
-        {/* <!------------------- registration form --------------------------> */}
-        <div class="register-container" id="register">
-            <div class="top">
-                <span>Have an account? <a href="#" onClick={login}>Login</a></span>
-                <header>Sign Up</header>
-            </div>
-            <div class="radio-container">
-              <div class="radio-tile-group">
-                <div class="input-container">
-              
-                  <input type="radio" id="Patient" name="radio"/>
-                  <div class="radio-tile">
-                    <box-icon class='bx bxs-user bx-lg' ></box-icon>
-                    <label for="Patient">Patient</label>
-                  </div>
-                </div>
-
-                <div class="input-container">
-                  <input type="radio" id="Doctor" name="radio"/>
-                  <div class="radio-tile">
-                    <box-icon class='bx bx-plus-medical bx-lg'></box-icon>
-                    <label htmlFor="Doctor">Doctor</label>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            
-            <div class="two-forms">
-                <div class="input-box">
-                    <input type="text" class="input-field" placeholder="Firstname"/>
-                    <box-icon className="bx bx-user"></box-icon>
-                </div>
-                <div class="input-box">
-                    <input type="text" class="input-field" placeholder="Lastname"/>
-                    <box-icon className="bx bx-user"></box-icon>
-                </div>
-            </div>
-            <div className="input-box">
-                <input type="text" className="input-field" placeholder="Email"/>
-                <box-icon className="bx bx-envelope"></box-icon>
-            </div>
-            <div className="input-box">
-                <input type="password" className="input-field" placeholder="Password"/>
-                <box-icon className="bx bx-lock-alt"></box-icon>
-            </div>
-            <div class="input-box">
-                <input type="submit" class="submit" value="Register"/>  
-                {/* <!------------------- logic to be implememented for register --------> */}
-            </div>
-            <div class="two-col">
-                <div class="one">
-                    <input type="checkbox" id="register-check"/>
-                    <label htmlFor="register-check"> Remember Me</label>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>   
-    </div>
-    )
-}
-
-function myMenuFunction() {
-    let i = document.getElementById("navMenu");
-
-    if(i.className === "nav-menu") {
-        i.className += " responsive";
-    } else {
-        i.className = "nav-menu";
-    }
-}
-
-let a = document.getElementById("loginBtn");
-let b = document.getElementById("registerBtn");
-let x = document.getElementById("login");
-let y = document.getElementById("register");
-
-function login() {
-    x.style.left = "4px";
-    y.style.right = "-520px";
-    a.className = "btn";
-    b.className += " white-btn";
-}
-
-function register() {
-    x.style.left = "-510px";
-    y.style.right = "5px";
-    a.className = "btn";
-    b.className += " white-btn";
-    x.style.opacity = 0;
-    y.style.opacity = 1;
-}
-
-export default LoginSignup;
+  export default LoginSignup;

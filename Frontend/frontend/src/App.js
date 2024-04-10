@@ -7,6 +7,8 @@ import DoctorInfo from './pages/DoctorInfo';
 import { Routes,Route } from 'react-router-dom';
 import ChatInt from './pages/ChatInt';
 import UserHome from './pages/UserHome';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 
 
@@ -18,7 +20,8 @@ function App() {
       <NaviBar/>
       <switch>
     <Routes>
-      <Route path="/" element={<LoginSignup />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/LoginSignup" element={<LoginSignup />} />
       <Route path="/UserInfo" element={<UserInfo />} />
       <Route path="/DoctorInfo" element={<DoctorInfo />} />
       <Route path="/Chat" element={<ChatInt/>} />
