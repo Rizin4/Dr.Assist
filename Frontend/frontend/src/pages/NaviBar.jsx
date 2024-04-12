@@ -38,8 +38,8 @@ const Navibar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link  as={Link} to="/UserHome">UserHome</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link  as={Link} to="/UserHome">User Home</Nav.Link>
+            <Nav.Link as={Link} to="/TranscribePrototype">Text2speech test</Nav.Link>
             <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
