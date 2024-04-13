@@ -2,7 +2,7 @@ from django.contrib import admin
 from api.models import User,Profile
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email']
+    list_display = ['username', 'email', 'isDoctor']
 
 
 class ProfileAdmin(admin.ModelAdmin):

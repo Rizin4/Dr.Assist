@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import django_ckeditor_5.fields
+# import django_ckeditor_5.fields
 import shortuuid.django_fields
 
 
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('sid', shortuuid.django_fields.ShortUUIDField(alphabet='abcdefghijklmnopqrstuvxyz', length=10, max_length=25, prefix='')),
                 ('image', models.ImageField(default='service.jpg', upload_to='service-images')),
                 ('title', models.CharField(max_length=1000)),
-                ('description', django_ckeditor_5.fields.CKEditor5Field()),
+                # ('description', django_ckeditor_5.fields.CKEditor5Field()),
                 ('price', models.DecimalField(decimal_places=2, default=1.99, max_digits=12)),
                 ('tags', models.CharField(blank=True, max_length=10000, null=True)),
                 ('features', models.CharField(blank=True, max_length=10000, null=True)),
