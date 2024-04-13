@@ -41,7 +41,7 @@ const Navibar = () => {
             <Nav.Link  as={Link} to="/UserHome">User Home</Nav.Link>
             <Nav.Link as={Link} to="/TranscribePrototype">Text2speech test</Nav.Link>
             <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/DocHome">DocHome</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
               </NavDropdown.Item>

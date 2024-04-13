@@ -1,0 +1,45 @@
+/* DocHome.css */
+
+/* Reset default styles */
+
+
+/* Container for the DocHome page */
+.container-page {
+    max-width: none;
+    margin: 0 auto;
+    padding: 20px;
+    /* overflow-y: scroll; */
+
+}
+
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+/*
+ Button styles 
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+*/
+.prof-width {
+    width: 28px;
+  }
+  
+  .prof-height {
+    height: 28px;
+  }
