@@ -21,6 +21,9 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+    def perform_create(self, serializer):
+        # Add the 'isDoctor' field to the serializer data
+        serializer.save()
 
 # Get All Routes
 
