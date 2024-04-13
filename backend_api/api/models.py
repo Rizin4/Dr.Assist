@@ -16,9 +16,15 @@ class User(AbstractUser):
         profile = Profile.objects.get(user=self)
 
 class Profile(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=1000)
     bio = models.CharField(max_length=100)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
     verified = models.BooleanField(default=False)
 
 
