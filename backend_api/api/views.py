@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import User
 
-from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer
+from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -48,3 +48,12 @@ def testEndPoint(request):
         data = f'Congratulation your API just responded to POST request with text: {text}'
         return Response({'response': data}, status=status.HTTP_200_OK)
     return Response({}, status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_doctors(request):
+    if request.method == 'GET':
+        doctors = User.objects.filter(isDoctor=True)
+        serializer = UserSerializer(doctors, many=True)
+        return Response(serializer.data)
+    return Response({}, status=status.HTTP_400_BAD_REQUEST)
