@@ -1,4 +1,4 @@
-from api.models import User
+from api.models import Report, User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
@@ -53,3 +53,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+    
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ['user', 'pdf_file']

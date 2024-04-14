@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import User
 
-from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
+from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, ReportSerializer, UserSerializer
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -57,3 +57,22 @@ def list_doctors(request):
         serializer = UserSerializer(doctors, many=True)
         return Response(serializer.data)
     return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_report(request):
+    if request.method == 'POST':
+        if not request.user.isDoctor:
+            serializer = ReportSerializer(data=request.data)
+            if serializer.is_valid():
+                # Check if 'pdf_file' is in request.FILES
+                if 'pdf_file' in request.FILES:
+                    serializer.save(user=request.user)
+                    return Response({'message': 'Report uploaded successfully'}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({'message': 'PDF file is required'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'message': 'Only non-doctor users are allowed to upload reports'}, status=status.HTTP_403_FORBIDDEN)
+    return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
