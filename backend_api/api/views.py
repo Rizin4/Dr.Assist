@@ -11,6 +11,8 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -25,8 +27,19 @@ class RegisterView(generics.CreateAPIView):
         # Add the 'isDoctor' field to the serializer data
         serializer.save()
 
-# Get All Routes
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        try:
+            refresh_token = request.data.get('refresh_token')
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# Get All Routes
 @api_view(['GET'])
 def getRoutes(request):
     routes = [
