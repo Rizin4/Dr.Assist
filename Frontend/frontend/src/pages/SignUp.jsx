@@ -5,10 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
 import 'dayjs/locale/en-gb';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import axios from 'axios';
 
 const SignInContainer = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -24,125 +24,142 @@ const SignInForm = styled("form")(({ theme }) => ({
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    dateofbirth: "",
+    "email": "",
+    "username": "",
+    "password": "",
+    "password2": "",
+    "isDoctor": false
   });
 
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    console.log(formData);
   };
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign-in logic here, such as sending form data to backend
     console.log("Sign-in form data:", formData);
+    const data = new FormData();
+    data.append('username', formData.username);
+    data.append('email', formData.email);
+    data.append('password', formData.password);
+    data.append('password2', formData.password2);
+    data.append('isDoctor', formData.isDoctor);
+    console.log(data);
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/register/', data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
     navigate("/login");
   };
 
 
-    const [alignment, setAlignment] = useState('web');
-  
-    const handleAlignmentChange = (event, newAlignment) => {
-      setAlignment(newAlignment);
-    };
+  const [alignment, setAlignment] = useState('web');
+
+  const handleAlignmentChange = (event) => {
+    setAlignment(event.target.value);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-    <SignInContainer component="main" maxWidth="xs">
-      <Typography variant="h4" gutterBottom>
-        Sign In
-      </Typography>
-      <SignInForm onSubmit={handleSubmit}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="name"
-          label="Name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="Password"
-          label="Password"
-          name="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="ConfirmPassword"
-          label="Confirm Password"
-          name="ConfirmPassword"
-          value={formData.ConfirmPassword}
-          onChange={handleChange}
-        />
-
-        <DatePicker 
-        variant="outlined"
-        margin="normal"
-        label="Date of Birth" 
-        
-        />
-        <ToggleButtonGroup
-        
-         color="primary"
-        value={alignment}
-        exclusive
-        onChange={handleAlignmentChange}
-        aria-label="User Type"
-        >
-        <ToggleButton value="Patient">Patient</ToggleButton>
-        <ToggleButton value="Doctor">Doctor</ToggleButton>
-        
-        </ToggleButtonGroup>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
-        >
+      <SignInContainer component="main" maxWidth="xs">
+        <Typography variant="h4" gutterBottom>
           Sign In
-        </Button>
-      </SignInForm>
-      <Box mt={2}>
-        <Typography variant="body2">
-          Already have an account?
-          <Link to="/" className="text-lg text-blue-700">
-            Login
-          </Link>
         </Typography>
-      </Box>
-    </SignInContainer>
+        <SignInForm onSubmit={handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Name"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="password"
+            type="password"
+            label="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="password2"
+            label="Confirm Password"
+            name="password2"
+            value={formData.password2}
+            onChange={handleChange}
+          />
+          <DatePicker
+            variant="outlined"
+            margin="normal"
+            label="Date of Birth"
+
+          />
+          <ToggleButtonGroup
+
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={(e) => {
+              handleAlignmentChange(e)
+              handleChange(e)
+            }}
+            aria-label="User Type"
+          >
+            <ToggleButton name="isDoctor" value='false' >Patient</ToggleButton>
+            <ToggleButton name="isDoctor" value='true'  >Doctor</ToggleButton>
+
+          </ToggleButtonGroup>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Sign In
+          </Button>
+        </SignInForm>
+        <Box mt={2}>
+          <Typography variant="body2">
+            Already have an account?
+            <Link to="/" className="text-lg text-blue-700">
+              Login
+            </Link>
+          </Typography>
+        </Box>
+      </SignInContainer>
     </LocalizationProvider>
   );
 };

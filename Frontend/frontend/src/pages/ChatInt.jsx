@@ -5,6 +5,8 @@ import { BiBot, BiUser } from 'react-icons/bi';
 import io from 'socket.io-client';
 import { SignJWT } from 'jose';
 import { v4 as uuidv4 } from 'uuid';
+import { TiMicrophone } from "react-icons/ti";
+import { TiMicrophoneOutline } from "react-icons/ti";
 
 function Basic() {
     const [chat, setChat] = useState([]);
@@ -54,7 +56,7 @@ function Basic() {
         });
 
         newSocket.on('connect', () => {
-            generateSessionId(); 
+            generateSessionId();
             const sessionId = sessionStorage.getItem('sessionId');
             console.log("connected : ", sessionId);
             newSocket.emit('session_request', { session_id: sessionId });
@@ -120,6 +122,12 @@ function Basic() {
         }
     }
 
+    const [isMicOn, setIsMicOn] = useState(false); // Initial state: mic off
+
+    const toggleMic = () => {
+        setIsMicOn(!isMicOn); // Toggle the mic state
+    };
+
 
     // const rasaAPI = async function handleClick(name, msg) {
 
@@ -167,14 +175,14 @@ function Basic() {
         height: '4.5rem',
         borderBottom: '1px solid black',
         borderRadius: '30px 30px 0px 0px',
-        backgroundColor: '#8012c4',
+        backgroundColor: '#2B3035',
 
     }
     const styleFooter = {
         //maxWidth : '32rem',
         borderTop: '1px solid black',
         borderRadius: '0px 0px 30px 30px',
-        backgroundColor: '#8012c4',
+        backgroundColor: '#2B3035',
 
 
     }
@@ -231,8 +239,14 @@ function Basic() {
                         <div className="cardFooter text-white" style={styleFooter}>
                             <div className="row">
                                 <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-                                    <div className="col-10" style={{ paddingRight: '0px' }}>
+                                    <div className="col-9" style={{ paddingRight: '0px' }}>
                                         <input onChange={e => setInputMessage(e.target.value)} value={inputMessage} type="text" className="msginp"></input>
+                                    </div>
+                                    <div className="col-2 cola">
+                                        {isMicOn ?
+                                            <button type="submit" className="circleBtn" onClick={toggleMic}><TiMicrophone className="sendBtn" /></button>
+                                            : <button type="submit" className="circleBtn" onClick={toggleMic}><TiMicrophoneOutline className="sendBtn" /></button>}
+
                                     </div>
                                     <div className="col-2 cola">
                                         <button type="submit" className="circleBtn" ><IoMdSend className="sendBtn" /></button>

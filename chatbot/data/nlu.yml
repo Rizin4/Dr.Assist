@@ -35,8 +35,11 @@ nlu:
       - My weight is 150 pounds
       - 80 kilograms
       - 160 lbs
-      - 72 
+      - 72
       - 25
+      - 90
+      - 68
+      - 75
 
   - intent: provide_temperature
     examples: |
@@ -499,7 +502,6 @@ nlu:
       - see you later
       - goodnight
       - good bye
-      - have a great day
       - see you soon
       - bye for now
       - stop
@@ -558,3 +560,7 @@ nlu:
       - not sure I understand
       - n
       - nil
+      - i dont have the equipment
+      - I don't have the equipment
+      - i cant do that right now
+      

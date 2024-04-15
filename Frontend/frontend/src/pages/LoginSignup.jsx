@@ -24,7 +24,7 @@ const LoginSignup = () => {
         setPassword(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) => { 
         e.preventDefault();
         // Add login/signup logic here
     };
