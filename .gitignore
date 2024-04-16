@@ -151,7 +151,7 @@ cython_debug/
 /chatbot/graph.html
 /chatbot/chatbot.py
 /Frontend/frontend/package-lock.json
-
+Frontend/frontend/node_modules
 
 # dependencies
 /node_modules
@@ -179,3 +179,4 @@ templates/
 Snippets.md
 
 /backend_api/media
+djangoenv/

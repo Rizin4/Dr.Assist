@@ -1,8 +1,8 @@
-require('dotenv').config()
+// require('dotenv').config()
 
 // Add Deepgram to get the transcription
 const { createClient ,  LiveTranscriptionEvents } = require('@deepgram/sdk')
-const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
+const deepgram = createClient("DEEPGRAM_API_KEY");
 
 // Add WebSocket
 const WebSocket = require('ws')
