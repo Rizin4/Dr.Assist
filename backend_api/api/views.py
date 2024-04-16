@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import User
 
-from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
+from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, ReportSerializer, UserSerializer
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -11,6 +11,8 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -25,8 +27,19 @@ class RegisterView(generics.CreateAPIView):
         # Add the 'isDoctor' field to the serializer data
         serializer.save()
 
-# Get All Routes
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        try:
+            refresh_token = request.data.get('refresh_token')
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# Get All Routes
 @api_view(['GET'])
 def getRoutes(request):
     routes = [
@@ -57,3 +70,22 @@ def list_doctors(request):
         serializer = UserSerializer(doctors, many=True)
         return Response(serializer.data)
     return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_report(request):
+    if request.method == 'POST':
+        if not request.user.isDoctor:
+            serializer = ReportSerializer(data=request.data)
+            if serializer.is_valid():
+                # Check if 'pdf_file' is in request.FILES
+                if 'pdf_file' in request.FILES:
+                    serializer.save(user=request.user)
+                    return Response({'message': 'Report uploaded successfully'}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({'message': 'PDF file is required'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'message': 'Only non-doctor users are allowed to upload reports'}, status=status.HTTP_403_FORBIDDEN)
+    return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

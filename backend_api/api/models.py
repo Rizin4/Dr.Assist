@@ -37,3 +37,9 @@ def save_user_profile(sender, instance, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 post_save.connect(save_user_profile, sender=User)
+
+
+# for pdf upload
+class Report(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pdf_file = models.FileField(upload_to='report_gallery/')

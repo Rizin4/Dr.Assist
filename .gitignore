@@ -177,4 +177,6 @@ yarn-error.log*
 templates/
 //frontend/
 Snippets.md
+
+/backend_api/media
 djangoenv/
