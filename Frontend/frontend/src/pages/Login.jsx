@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, TextField, Button, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const FormContainer = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
   display: "flex",
@@ -23,21 +24,33 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Hardcoded credentials for demo purposes
-    const hardcodedEmail = "john@gmail.com";
-    const hardcodedPassword = "john@gmail.com";
-
-    if (email === hardcodedEmail && password === hardcodedPassword) {
-      // Redirect to /home upon successful login
-      localStorage.setItem("isAuth", true);
-      localStorage.setItem("userName", hardcodedEmail);
-      navigate("/home");
-    } else {
-      alert("Invalid email or password. Please try again.");
-    }
-  };
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const user = {
+      email: email,
+      password: password,
+    };
+try{
+    const {data} = await axios.post("http://localhost:8000/api/token/", user, 
+    { headers: {'Content-Type': 'application/json' } },
+    {withCredentials: true})
+    // .then(response => {console.log(data);} );
+    localStorage.clear();
+    localStorage.setItem("access_token", data.access);
+    localStorage.setItem("refresh_token", data.refresh);
+    localStorage.setItem("isAuth", true);
+    localStorage.setItem("userName", email);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
+    navigate("/UserHome");
+  }catch(error){
+    console.error(error);
+    alert('Invalid credentials');
+}
+  }
+  // useEffect(() => {
+  //   if(localStorage.getItem('access_token') === null){
+  //     alert('Invalid credentials');  
+  //   }
 
   return (
     <FormContainer component="main" maxWidth="xs">

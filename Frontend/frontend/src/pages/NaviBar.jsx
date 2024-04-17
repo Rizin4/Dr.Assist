@@ -68,7 +68,7 @@ const Navibar = () => {
             ): (
               <>
               <Nav> 
-          <NavDropdown title="Hello $User" id="basic-nav-dropdown">
+          <NavDropdown title={`Hello ${userName}`} id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Edit Profile</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Past Summaries
