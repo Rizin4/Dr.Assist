@@ -19,11 +19,17 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['full_name'] = user.profile.full_name
         token['username'] = user.username
         token['email'] = user.email
-        token['bio'] = user.profile.bio
         token['gender'] = user.profile.gender
         token['verified'] = user.profile.verified
+        token['isDoctor'] = user.isDoctor
         # ...
         return token
+    
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['isDoctor'] = self.user.isDoctor          # Add isDoctor to the response data
+
+        return data
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -57,4 +63,4 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ['user', 'pdf_file']
+        fields = '__all__'

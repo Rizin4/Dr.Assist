@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
@@ -23,7 +24,6 @@ class Profile(models.Model):
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=1000)
-    bio = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
     verified = models.BooleanField(default=False)
 
@@ -42,4 +42,5 @@ post_save.connect(save_user_profile, sender=User)
 # for pdf upload
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pdf_file = models.FileField(upload_to='report_gallery/')
+    file = models.FileField(upload_to='report_gallery/')
+    created_at = models.DateTimeField(default=timezone.now)

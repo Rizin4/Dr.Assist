@@ -10,7 +10,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'full_name' ,'verified']
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ['user', 'pdf_file']
+    list_display = ['user', 'file']
 
 admin.site.register(User, UserAdmin)
 admin.site.register( Profile,ProfileAdmin)
