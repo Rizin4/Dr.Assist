@@ -11,7 +11,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('list-doctors/', views.list_doctors, name='list_doctors'),
-    path('upload-report/', views.upload_report, name='upload_pdf'),
+    path('generate-pdf/', views.generate_pdf, name='generate_pdf'),
     path('test/', views.testEndPoint, name='test'),
     path('', views.getRoutes),
 ]
