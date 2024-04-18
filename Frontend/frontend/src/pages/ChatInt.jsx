@@ -1,5 +1,5 @@
 import './ChatInt.css';
-import react, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { BiBot, BiUser } from 'react-icons/bi';
 import io from 'socket.io-client';
@@ -26,7 +26,8 @@ function Basic() {
             "user": {
                 "username": name,
                 "role": "user"
-            }
+            },
+            "session_id": sessionStorage.getItem('sessionId')
         };
         const secretKey = process.env.REACT_APP_JWT_SECRET_KEY;
         const secretKeyutf8 = new TextEncoder().encode(secretKey);

@@ -180,3 +180,7 @@ Snippets.md
 
 /backend_api/media
 djangoenv/
+
+
+chatbot/credentials.yml
+chatbot/endpoints.yml
