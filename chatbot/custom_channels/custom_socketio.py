@@ -70,11 +70,10 @@ class CustomSocketIOInput(SocketIOInput):
                     logger.debug("jwt payload from frontend" + str(jwt_payload))
 
                 if jwt_payload:
-                    session_id = jwt_payload.get("session_id")
                     await on_new_message(
                         UserMessage(
                             text="",
-                            sender_id=session_id,
+                            sender_id=sid,
                             input_channel=self.name(),
                             metadata=jwt_payload,
                         )

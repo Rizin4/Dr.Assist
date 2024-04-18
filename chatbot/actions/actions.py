@@ -3,6 +3,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, UserUtteranceReverted, ConversationPaused
 import json
+import json
 
 
 class ActionNameFetch(Action):
@@ -18,10 +19,12 @@ class ActionNameFetch(Action):
     ) -> List[Dict[Text, Any]]:
 
         name = "John"
-        metadata = tracker.get_slot("session_started_metadata")
-        print(str(metadata))
-        # with open("tracker_data.json", "w") as outfile:
-        #     json.dump(tracker_state, outfile)
+        userdata = tracker.get_slot("session_started_metadata")
+        print(str(userdata))
+        if userdata:
+            userdata = json.loads(userdata)
+        
+            
         return [SlotSet("name", name)]
 
 

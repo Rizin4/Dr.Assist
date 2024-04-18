@@ -1,10 +1,9 @@
 import './ChatInt.css';
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { BiBot, BiUser } from 'react-icons/bi';
 import io from 'socket.io-client';
 import { SignJWT } from 'jose';
-import { v4 as uuidv4 } from 'uuid';
 import { TiMicrophone } from "react-icons/ti";
 import { TiMicrophoneOutline } from "react-icons/ti";
 
@@ -16,18 +15,12 @@ function Basic() {
 
     const name = "george"; //to be removed ;for setting name  temporarily
 
-    const generateSessionId = () => {
-        const sessionId = uuidv4();
-        sessionStorage.setItem('sessionId', sessionId);
-    };
-
     const generateJWT = async () => { //to be removed ;for generating jwt token temporarily
         const payload = {
             "user": {
                 "username": name,
-                "role": "user"
-            },
-            "session_id": sessionStorage.getItem('sessionId')
+                "role": "user",
+            }
         };
         const secretKey = process.env.REACT_APP_JWT_SECRET_KEY;
         const secretKeyutf8 = new TextEncoder().encode(secretKey);
@@ -46,8 +39,12 @@ function Basic() {
 
     useEffect(() => {
         console.log("useEffect called");
-        generateJWT(); //to be removed ;for generating jwt token temporarily
+
         const jwt = localStorage.getItem('jwt');
+        if (!jwt || jwt === null || jwt === "undefined") {
+            generateJWT();
+        }
+
         console.log("token: ", jwt);
 
         const newSocket = io(process.env.REACT_APP_SOCKET_SERVER_URL, {
@@ -57,16 +54,9 @@ function Basic() {
         });
 
         newSocket.on('connect', () => {
-            generateSessionId();
-            const sessionId = sessionStorage.getItem('sessionId');
-            console.log("connected : ", sessionId);
-            newSocket.emit('session_request', { session_id: sessionId });
             setSocket(newSocket);
             console.log("connect socket1: ", newSocket);
 
-        });
-        newSocket.on('session_confirm', (session_id) => {
-            console.log("session_confirm: ", session_id);
         });
         newSocket.on('disconnect', () => {
             console.log('Disconnected from the server');
@@ -88,7 +78,6 @@ function Basic() {
             newSocket.off('connect');
             newSocket.off('disconnect');
             newSocket.off('bot_uttered');
-            newSocket.off('session_confirm');
             newSocket.off('connect_error');
             newSocket.close()
         };
@@ -112,8 +101,7 @@ function Basic() {
             setbotTyping(true);
             setInputMessage('');
             console.log("inputMessage: ", inputMessage);
-            const sessionId = sessionStorage.getItem('sessionId');
-            socket.emit('user_uttered', { message: inputMessage, session_id: sessionId, sender: name }, () => {
+            socket.emit('user_uttered', { message: inputMessage, sender: name }, () => {
                 console.log("user_uttered invoked");
             });
             // rasaAPI(name, inputMessage);
