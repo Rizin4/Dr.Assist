@@ -12,6 +12,7 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('list-doctors/', views.list_doctors, name='list_doctors'),
     path('generate-pdf/', views.generate_pdf, name='generate_pdf'),
+    path('chatbot-token/', views.generate_custom_access_token, name='chatbot_token'),
     path('test/', views.testEndPoint, name='test'),
     path('', views.getRoutes),
 ]
