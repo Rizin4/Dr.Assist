@@ -1,4 +1,3 @@
-import json
 from api.models import User
 from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, ReportSerializer, UserSerializer
 from rest_framework.decorators import api_view, permission_classes
@@ -11,12 +10,17 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.files.base import ContentFile
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Frame, Spacer
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.lib import colors
 from .permissions import IsNotDoctor
 from .models import Report
+from rest_framework_simplejwt.tokens import AccessToken
 import io
+from .utils import generate_custom_jwt_payload
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -203,3 +207,24 @@ def generate_pdf(request):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def generate_custom_access_token(request):
+    user = request.user
+
+    # Generate access token for the user
+    access_token = AccessToken.for_user(user)
+
+    # Retrieve creation time of the login access token
+    login_access_token_created_at = access_token['exp']
+
+    # Generate custom payload
+    payload = generate_custom_jwt_payload(access_token, user, login_access_token_created_at)
+
+    # Attach custom payload to access token
+    access_token.payload.update(payload)
+
+    return Response({'custom_access_token': str(access_token)}, status=status.HTTP_200_OK)
+
+
