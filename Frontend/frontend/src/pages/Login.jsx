@@ -39,7 +39,7 @@ try{
     localStorage.setItem("access_token", data.access);
     localStorage.setItem("refresh_token", data.refresh);
     localStorage.setItem("isAuth", true);
-    localStorage.setItem("userName", email);
+   
     axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
     navigate("/UserHome");
   }catch(error){

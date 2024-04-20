@@ -1,6 +1,5 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LoginSignup from './pages/LoginSignup';
 import NaviBar from './pages/NaviBar';
 import UserInfo from './pages/UserInfo';
 import DoctorInfo from './pages/DoctorInfo';
@@ -11,14 +10,13 @@ import TranscribePrototype from './pages/TranscribePrototype';
 import DocHome from './pages/DocHome';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import PatientPastSum from './pages/PatientPastSum';
 
 
 
 function App() {
   return (
-    <>
-    
-    <div className="container">
+    <div className="">
       <NaviBar/>
       <switch>
     <Routes>
@@ -32,10 +30,11 @@ function App() {
       <Route path="/Navibar" element={<NaviBar />} />
       <Route path="/TranscribePrototype" element={<TranscribePrototype />} />
       <Route path='/DocHome' element={<DocHome />} />
+      <Route path='PastSum' element={<PatientPastSum />} />
       </Routes>
       </switch>
     </div>
-    </>
+    
   );
 }
 

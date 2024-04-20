@@ -140,6 +140,7 @@ cython_debug/
 # Dr.Assist
 /.venv
 /rasaenv
+/chatbot/rasaenv
 /chatbot/.rasa
 /chatbot/models/
 /chatbot/logs/
