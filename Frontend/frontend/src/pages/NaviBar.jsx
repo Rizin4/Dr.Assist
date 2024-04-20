@@ -5,6 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './NaviBar.css';
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -14,7 +15,13 @@ const Navibar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isAuth = localStorage.getItem("isAuth") === "true";
-    const userName = localStorage.getItem("userName") ;
+    // const userName = localStorage.getItem("userName") ;
+    const token = localStorage.getItem("access_token");
+    const decoded = jwtDecode(token);
+    console.log(decoded);
+    const userName = decoded.username;
+    localStorage.setItem("userName", userName);
+    console.log(localStorage.getItem("userName"));
     
   
 
@@ -32,13 +39,13 @@ const Navibar = () => {
 
 
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" data-bs-theme="dark">
+    <Navbar collapseOnSelect expand="lg" className="navbar border-bottom border-body bg-dark" data-bs-theme="dark">
       <Container>
         <Navbar.Brand as={Link} to="/" exact className='nav-logo'>MedHUB  .</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link  as={Link} to="/UserHome">User Home</Nav.Link>
+          { <Nav className="me-auto">
+          {/* <Nav.Link  as={Link} to="/UserHome" className="nav-menu">User Home</Nav.Link>
             <Nav.Link as={Link} to="/TranscribePrototype">Text2speech test</Nav.Link>
             <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item as={Link} to="/DocHome">DocHome</NavDropdown.Item>
@@ -50,17 +57,17 @@ const Navibar = () => {
               <NavDropdown.Item href="#action/3.4">
                 Separated link
               </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
+            </NavDropdown> */}
+          </Nav> } //add some nav links here???
           {location.pathname === "/" || location.pathname === "/Signup" ? (
             <>
             
-            <Nav>
-                <Nav.Link as={Link} to="/Signup">
-                 Sign Up 
+            <Nav className="nav-button">
+                <Nav.Link as={Link} to="/Signup"className="btn">
+                 Sign Up   
                 </Nav.Link>
                 
-              <Nav.Link as={Link} to="/" onClick={handleSignIn}>
+              <Nav.Link as={Link} to="/" onClick={handleSignIn} className="btn" id="registerBtn">
                 Sign In
                 </Nav.Link>
             </Nav>

@@ -1,5 +1,5 @@
 import './ChatInt.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState ,useRef } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { BiBot, BiUser } from 'react-icons/bi';
 import io from 'socket.io-client';
@@ -100,6 +100,7 @@ function Basic() {
             setChat(chat => [...chat, request_temp]);
             setbotTyping(true);
             setInputMessage('');
+            setTranscriberTest('');
             console.log("inputMessage: ", inputMessage);
             socket.emit('user_uttered', { message: inputMessage, sender: name }, () => {
                 console.log("user_uttered invoked");
@@ -149,6 +150,56 @@ function Basic() {
     //         })
     // }
 
+    //start of transcriber
+
+    const [TranscriberTest, setTranscriberTest] = useState('')
+	const [finalTranscriberTest, setFinalTranscriberTest] = useState(false)
+    const socketRef = useRef(null)
+
+	const handleChange = (e) => {
+        setInputMessage(e.target.value) 
+		setTranscriberTest(e.target.value)
+	}
+
+    const activateMicrophone = ( ) => {
+
+        console.log("Submit")
+        //microphone access
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            const mediaRecorder = new MediaRecorder(stream ,{mimeType: 'audio/webm'})
+            
+            const socket = new WebSocket('ws://localhost:3003')
+            socket.onopen = () => {
+	        console.log({ event: 'onopen' })
+	        mediaRecorder.addEventListener('dataavailable', async (event) => {
+		if (event.data.size > 0 && socket.readyState === 1) {
+			socket.send(event.data)
+		}
+	})
+	mediaRecorder.start(1000)
+}
+
+socket.onmessage = (message) => {
+	
+	const transcript = message.data
+	if (transcript) {
+		console.log(transcript)
+		setInputMessage(transcript)
+	}
+}
+
+socket.onclose = () => {
+	console.log({ event: 'onclose' })
+}
+
+socket.onerror = (error) => {
+	console.log({ event: 'onerror', error })
+}
+
+socketRef.current = socket
+        })
+    }
+  //end of transcriber 
 
 
     const stylecard = {
@@ -193,10 +244,8 @@ function Basic() {
 
                     <div className="card" style={stylecard}>
                         <div className="cardHeader text-white" style={styleHeader}>
-                            <h1 style={{ marginBottom: '0px' }}>AI Assistant</h1>
-                            {botTyping ? <h6>Bot Typing....</h6> : null}
-
-
+                            <h2 style={{ marginBottom: '0px', textAlign: 'center' }}>AI Assistant</h2>
+                            {botTyping ? <h6>Dr.Assist is typing....</h6> : null}
 
                         </div>
                         <div className="cardBody" id="messageArea" style={styleBody}>
@@ -229,12 +278,12 @@ function Basic() {
                             <div className="row">
                                 <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
                                     <div className="col-9" style={{ paddingRight: '0px' }}>
-                                        <input onChange={e => setInputMessage(e.target.value)} value={inputMessage} type="text" className="msginp"></input>
+                                        <input onChange={handleChange} value={inputMessage} type="text" className="msginp"></input>
                                     </div>
-                                    <div className="col-2 cola">
+                                    <div className="">
                                         {isMicOn ?
-                                            <button type="submit" className="circleBtn" onClick={toggleMic}><TiMicrophone className="sendBtn" /></button>
-                                            : <button type="submit" className="circleBtn" onClick={toggleMic}><TiMicrophoneOutline className="sendBtn" /></button>}
+                                            <button type="button" className="circleBtn"onClick={toggleMic} ><TiMicrophone className="sendBtn" /></button>
+                                            : <button type="button" className="circleBtn" onClick={() => { toggleMic(); activateMicrophone(); }}><TiMicrophoneOutline className="sendBtn" /></button>}
 
                                     </div>
                                     <div className="col-2 cola">
