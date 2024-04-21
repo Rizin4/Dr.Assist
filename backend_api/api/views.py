@@ -1,3 +1,5 @@
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
 from api.models import User
 from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer, ReportSerializer, UserSerializer
 from rest_framework.decorators import api_view, permission_classes
@@ -15,7 +17,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.lib import colors
-from .permissions import IsNotDoctor
+from .permissions import IsDoctor, IsPatient
 from .models import Report
 from rest_framework_simplejwt.tokens import AccessToken
 import io
@@ -79,7 +81,7 @@ def list_doctors(request):
     return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated, IsNotDoctor])
+@permission_classes([IsAuthenticated, IsPatient])
 def generate_pdf(request):
     if request.method == 'POST':
 
@@ -228,3 +230,86 @@ def generate_custom_access_token(request):
     return Response({'custom_access_token': str(access_token)}, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsPatient])
+def report_gallery(request):
+    if request.method == 'GET':
+        patient = request.user
+        patient_pdfs = Report.objects.filter(user=patient)
+        serializer = ReportSerializer(patient_pdfs, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_report(request, pk):
+    try:
+        report = Report.objects.get(pk=pk)
+
+        if request.user == report.user:
+            report.delete()
+
+            return Response({'message': 'Report deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'error': 'You are not authorized to delete this report.'}, status=status.HTTP_403_FORBIDDEN)
+    except Report.DoesNotExist:
+        return Response({'error': 'Report not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def share_report_with_doctor(request):
+    # Extract report_id and doctor_id from request data
+    report_id = request.data.get('report_id')
+    doctor_id = request.data.get('doctor_id')
+    
+    try:
+        # Retrieve the PDF report from the database
+        report = Report.objects.get(id=report_id)
+        
+        # Check if the authenticated user is the owner of the report
+        if request.user != report.user:
+            return Response({'error': 'You are not the owner of this report.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check if the chosen doctor exists and is a registered doctor
+        doctor = User.objects.get(id=doctor_id, isDoctor=True)
+        
+        # Share the report with the chosen doctor (update report in database)
+        report.shared_with.add(doctor)
+        report.save()
+        
+        # Optionally, you can return the updated report details in the response
+        serializer = ReportSerializer(report)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    except Report.DoesNotExist:
+        return Response({'error': 'Report not found.'}, status=status.HTTP_404_NOT_FOUND)
+    except User.DoesNotExist:
+        return Response({'error': 'Chosen doctor not found or is not registered as a doctor.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsDoctor])
+def view_received_pdfs(request):
+    # Ensure that only authenticated doctor users can access this endpoint
+    if request.method == 'GET':
+        # Retrieve the authenticated doctor user
+        doctor = request.user
+
+        # Retrieve all PDF reports shared with the doctor
+        received_reports = Report.objects.filter(shared_with=doctor)
+
+        # Serialize the reports along with user details
+        serialized_reports = ReportSerializer(received_reports, many=True)
+
+        return Response(serialized_reports.data, status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsPatient])
+def view_selected_pdf(request, pdf_id):
+    # Retrieve the selected PDF from the Report gallery
+    pdf = get_object_or_404(Report, id=pdf_id, user=request.user)
+
+    # Serve the PDF file as a response
+    try:
+        return FileResponse(open(pdf.file.path, 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        return Response({'error': 'PDF file not found'}, status=status.HTTP_404_NOT_FOUND)
