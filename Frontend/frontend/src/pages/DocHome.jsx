@@ -4,9 +4,26 @@ import {} from '@mui/material/styles';
 import { ThemeProvider, createTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./DocHome.css";
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 
 
 const DocHome = () => {
+    const userName = localStorage.getItem("userName") ;  
+
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+      });
+      
 
 const columns = [
     
@@ -14,16 +31,16 @@ const columns = [
         name:"id",
         label:"Serial No."
     },
-        {
-            name:"image",
-            label:"Profile",
-            options:{
-            customBodyRender: (value) =>(
-            <img src={value} alt="Profile" className="prof-width prof-height"/>
-        ),
-        filter:false,
-    },
-        },
+    //     {
+    //         name:"image",
+    //         label:"Profile",
+    //         options:{
+    //         customBodyRender: (value) =>(
+    //         <img src={value} alt="Profile" className="prof-width prof-height"/>
+    //     ),
+    //     filter:false,
+    // },
+    //     },
     {
         name:"firstName",
         label:"Name"
@@ -43,13 +60,34 @@ const columns = [
         options:{
             
         customBodyRender: (value) =>(
-           <button> <a href={'https://'+value} target="_blank" >View Report</a> 
-            </button> 
+            <Button variant="contained" href={'https://'+value} target="_blank"> View Report
+            </Button> 
              
         ),
         filter:false,
     },
     }, 
+    {
+        name:"reply",
+        label:"Upload Report",
+        options:{
+            
+            customBodyRender: (value) =>(
+                <Button
+                     component="label"
+                     role={undefined}
+                    variant="contained"
+                     tabIndex={-1}
+                     startIcon={<CloudUploadIcon />}
+                >
+                Upload file
+                <VisuallyHiddenInput type="file" />
+                </Button>        
+            ),
+            filter:false,
+        },
+
+    },
 ];
 
 const [users, setUsers] = useState([]);
@@ -86,7 +124,7 @@ createTheme({
 });
     return (
         <div className=""> 
-                <h2 className="h2"> Welcome Back Doctor(fetch doc name here if possible?)</h2>
+                <h2 className="h2"> Welcome Back ${userName}</h2>
 
          <ThemeProvider theme={getMuiTheme()}>
         <div className="container-page"> <MUIDataTable className="container-page"

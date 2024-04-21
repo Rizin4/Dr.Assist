@@ -60,8 +60,10 @@ const SignUp = () => {
       console.log(response.data);
     } catch (error) {
       console.error(error);
+      alert('Error:'+error);
     }
-    navigate("/login");
+
+    navigate("/");
   };
 
 
@@ -123,6 +125,7 @@ const SignUp = () => {
             margin="normal"
             required
             fullWidth
+            type="password"
             id="password2"
             label="Confirm Password"
             name="password2"
@@ -195,7 +198,7 @@ const SignUp = () => {
             color="primary"
             sx={{ mt: 2 }}
           >
-            Sign In
+            Sign Up
           </Button>
           </Box>
         </SignInForm>
