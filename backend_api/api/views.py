@@ -25,6 +25,7 @@ from reportlab.lib import colors
 from .permissions import IsDoctor, IsPatient
 from .models import Report
 from rest_framework_simplejwt.tokens import AccessToken
+import PyPDF2
 import io
 # from .utils import generate_custom_jwt_payload
 
@@ -225,55 +226,6 @@ def generate_pdf(request):
         doc = SimpleDocTemplate(buffer, pagesize=letter)
         elements = []
 
-        # styles = getSampleStyleSheet()
-        # # styles = {
-        # #     'Title': ParagraphStyle(
-        # #         name='Title',
-        # #         fontSize=16,
-        # #         leading=20
-        # #     ),
-        # #     'Heading1': ParagraphStyle(
-        # #         name='Heading1',
-        # #         fontSize=15,
-        # #         leading=20
-        # #     ),
-        # #     'Normal': ParagraphStyle(
-        # #         name='Normal',
-        # #         fontSize=12,
-        # #         leading=14
-        # #     ),
-        # # }
-
-        # elements.append(Paragraph("Patient Details", styles['Title']))
-        # elements.append(Paragraph(f"Name: {user_details['full_name']}", styles['Normal']))
-        # elements.append(Paragraph(f"Username: {user_details['username']}", styles['Normal']))
-        # elements.append(Paragraph(f"Email: {user_details['email']}", styles['Normal']))
-        # elements.append(Paragraph(f"Gender: {user_details['gender']}", styles['Normal']))
-        # for category, info in chatbot_summary['patient_info'].items():
-        #     elements.append(Paragraph(f"{category.replace('_', ' ').capitalize()}: {info}", styles['Normal']))
-        # elements.append(Spacer(1, 12))
-        # elements.append(Paragraph("Case Report", styles['Title']))
-        # # elements.append(Paragraph(chatbot_summary, styles['Normal']))
-        # elements.append(Paragraph("allergies", styles['Title']))
-        # for category, info in chatbot_summary['allergies'].items():
-        #     elements.append(Paragraph(f"{category.replace('_', ' ').capitalize()}: {info}", styles['Normal']))
-        # elements.append(Paragraph("Current_medication", styles['Heading1']))
-        # elements.append(Paragraph(chatbot_summary.get('Current_medication', 'unspecified'), styles['Normal']))
-        # elements.append(Paragraph("symptoms", styles['Title']))
-        # for category, info in chatbot_summary['symptoms'].items():
-        #     elements.append(Paragraph(f"{category.replace('_', ' ').capitalize()}: {info}", styles['Normal']))
-        # elements.append(Paragraph("medical_history", styles['Title']))
-        # for category, info in chatbot_summary['medical_history'].items():
-        #     elements.append(Paragraph(f"{category.replace('_', ' ').capitalize()}: {info}", styles['Normal']))
-        # elements.append(Paragraph("lifestyle", styles['Title']))
-        # for category, info in chatbot_summary['lifestyle'].items():
-        #     elements.append(Paragraph(f"{category.replace('_', ' ').capitalize()}: {info}", styles['Normal']))
-        # elements.append(Paragraph("social_determinants", styles['Title']))
-        # for category, info in chatbot_summary['social_determinants'].items():
-        #     elements.append(Paragraph(f"{category.replace('_', ' ').capitalize()}: {info}", styles['Normal']))
-        # elements.append(Paragraph("Added Info:", styles['Heading1']))
-        # elements.append(Paragraph(chatbot_summary.get('added_info'), styles['Normal']))
-
         # Define custom styles
         styles = getSampleStyleSheet()
         custom_title_style = ParagraphStyle(
@@ -427,7 +379,7 @@ def share_report_with_doctor(request):
         # Share the report with the chosen doctor (update report in database)
         report.shared_with.add(doctor)
         report.save()
-        
+
         # Optionally, you can return the updated report details in the response
         serializer = ReportSerializer(report)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -464,3 +416,36 @@ def view_selected_pdf(request, pdf_id):
         return FileResponse(open(pdf.file.path, 'rb'), content_type='application/pdf')
     except FileNotFoundError:
         return Response({'error': 'PDF file not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsDoctor])
+def doctor_append(request, patient_id, report_id):
+    
+    doctor_pdf = request.FILES.get('file')
+
+    # Check if patient and patient's PDF exist
+    patient_pdf = get_object_or_404(Report, user_id=patient_id, id=report_id)
+
+    # Append doctor's PDF to patient's PDF
+    patient_pdf_file = patient_pdf.file.path
+    with open(patient_pdf_file, 'rb') as patient_pdf_file:
+        pdf_reader = PyPDF2.PdfReader(patient_pdf_file)
+        pdf_writer = PyPDF2.PdfWriter()
+
+        # Add patient's PDF pages to new PDF writer
+        for page_num in range(len(pdf_reader.pages)):
+            pdf_writer.add_page(pdf_reader.pages[page_num])
+
+        # Add doctor's PDF pages to new PDF writer
+        pdf_writer.append_pages_from_reader(PyPDF2.PdfReader(doctor_pdf))
+
+        # Write new PDF to disk
+        new_pdf_path = f'media/report_gallery/{report_id}_combined_pdf.pdf'  # Customize the path as needed
+        with open(new_pdf_path, 'wb') as new_pdf_file:
+            pdf_writer.write(new_pdf_file)
+
+    # Update patient's PDF in the database
+    patient_pdf.file = new_pdf_path
+    patient_pdf.save()
+
+    return Response({'message': 'PDF uploaded and appended successfully.'}, status=status.HTTP_200_OK)
