@@ -13,6 +13,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 
 const PatientPastSum = () => {
+    
 
     const username=localStorage.getItem("userName");
 
@@ -94,7 +95,7 @@ createTheme({
 });
     return (
         <div className=""> 
-                <h2 className="h2">{`Hello ${username}`}</h2>
+                <h2 className="h2">{`Hello ${username} `}</h2>
 
          <ThemeProvider theme={getMuiTheme()}>
         <div className="container-page"> <MUIDataTable className="container-page"
@@ -107,6 +108,8 @@ createTheme({
         </ThemeProvider>
         </div>
     );
+
 }
+
 
 export default PatientPastSum;

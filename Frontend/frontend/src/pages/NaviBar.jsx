@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './NaviBar.css';
-import { jwtDecode } from 'jwt-decode';
+
 
 
 
@@ -14,20 +14,14 @@ const Navibar = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const isAuth = localStorage.getItem("isAuth") === "true";
-    // const userName = localStorage.getItem("userName") ;
-    const token = localStorage.getItem("access_token");
-    const decoded = jwtDecode(token);
-    console.log(decoded);
-    const userName = decoded.username;
-    localStorage.setItem("userName", userName);
-    console.log(localStorage.getItem("userName"));
-    
+    const isAuth = localStorage.getItem("isAuth");
+    const userName = localStorage.getItem("userName") ;    
   
 
     const handleLogout = () => {
       localStorage.removeItem("isAuth");
       localStorage.removeItem("userName");
+      localStorage.clear();
       navigate("/");
     };
   
@@ -41,7 +35,7 @@ const Navibar = () => {
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar border-bottom border-body bg-dark" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand as={Link} to="/" exact className='nav-logo'>MedHUB  .</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" exact className='nav-logo'>Dr. Assist  </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           { <Nav className="me-auto">
@@ -75,6 +69,7 @@ const Navibar = () => {
             ): (
               <>
               <Nav> 
+              {isAuth && (
           <NavDropdown title={`Hello ${userName}`} id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Edit Profile</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -86,6 +81,7 @@ const Navibar = () => {
                 Log Out
               </NavDropdown.Item>
             </NavDropdown>
+                )}
           </Nav>
           </>
           )}

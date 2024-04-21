@@ -3,6 +3,8 @@ import { Container, TextField, Button, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';
+
 const FormContainer = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
   display: "flex",
@@ -38,7 +40,15 @@ const Login = () => {
       localStorage.clear();
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
-      localStorage.setItem("isAuth", true);
+      const isDoctor =data.isDoctor
+      {data.access!=null? ( localStorage.setItem("isAuth", true)):(localStorage.setItem("isAuth",false))}
+      if (data.access) {
+        const decoded = jwtDecode(data.access);
+        console.log(decoded);
+        const userName = decoded.username;
+        localStorage.setItem("userName", userName);
+        console.log(localStorage.getItem("userName"));
+      }
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
 
@@ -55,11 +65,17 @@ const Login = () => {
       } else {
         console.error('Error:', response.status, response.statusText);
       }
-      navigate("/UserHome");
+      console.log("doc:"+isDoctor);
+      if (isDoctor) {
+        navigate("/DocHome");
+      } else {
+        navigate("/PastSum");
+      }
     } catch (error) {
       console.error(error);
       alert('Invalid credentials');
     }
+   
   }
   // useEffect(() => {
   //   if(localStorage.getItem('access_token') === null){
