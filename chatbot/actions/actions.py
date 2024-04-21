@@ -2,8 +2,7 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, UserUtteranceReverted, ConversationPaused
-import json
-import json
+import requests
 
 
 class ActionNameFetch(Action):
@@ -18,13 +17,13 @@ class ActionNameFetch(Action):
         domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
 
-        name = "John"
-        userdata = tracker.get_slot("session_started_metadata")
-        print(str(userdata))
-        if userdata:
-            userdata = json.loads(userdata)
-        
-            
+        payload = tracker.get_slot("session_started_metadata")
+        print("payload from session metadata:" + str(payload))
+
+        name = "default rasa user"
+        if payload:
+            name = payload.get("user").get("username")
+
         return [SlotSet("name", name)]
 
 
@@ -125,4 +124,17 @@ class ActionEndSession(Action):
                     flag = True
 
         print(conversation_data)
+        payload = tracker.get_slot("session_started_metadata")
+        url = "http://127.0.0.1:8000/api/generate-pdf/"
+        print(payload.get("access_token"))
+        if payload:
+            token = payload.get("access_token")
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            }
+            data = {"conversation_data": conversation_data}
+            response = requests.post(url, headers=headers, json=data)
+            print(str(response.text))
+
         return [ConversationPaused()]

@@ -1,9 +1,9 @@
 import './ChatInt.css';
-import { useEffect, useState ,useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { BiBot, BiUser } from 'react-icons/bi';
 import io from 'socket.io-client';
-import { SignJWT } from 'jose';
+import axios from 'axios';
 import { TiMicrophone } from "react-icons/ti";
 import { TiMicrophoneOutline } from "react-icons/ti";
 
@@ -12,44 +12,36 @@ function Basic() {
     const [inputMessage, setInputMessage] = useState('');
     const [botTyping, setbotTyping] = useState(false);
     const [socket, setSocket] = useState(null);
+    const [name, setName] = useState('');
 
-    const name = "george"; //to be removed ;for setting name  temporarily
-
-    const generateJWT = async () => { //to be removed ;for generating jwt token temporarily
-        const payload = {
-            "user": {
-                "username": name,
-                "role": "user",
+    const fetchRasaJWT = async () => {
+        try {
+            const access_token = localStorage.getItem('access_token');
+            const response = await axios.get('http://localhost:8000/api/chatbot-token/', {
+                headers: {
+                    'Authorization': `Bearer ${access_token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch rasa_jwt');
             }
-        };
-        const secretKey = process.env.REACT_APP_JWT_SECRET_KEY;
-        const secretKeyutf8 = new TextEncoder().encode(secretKey);
-        const jwt = await new SignJWT(payload)
-            .setProtectedHeader({ alg: 'HS256' })
-            .sign(secretKeyutf8);
-        localStorage.setItem('jwt', jwt);
-    }
 
-
-    useEffect(() => {
-        console.log("called");
-        const objDiv = document.getElementById('messageArea');
-        objDiv.scrollTop = objDiv.scrollHeight;
-    }, [chat])
-
-    useEffect(() => {
-        console.log("useEffect called");
-
-        const jwt = localStorage.getItem('jwt');
-        if (!jwt || jwt === null || jwt === "undefined") {
-            generateJWT();
+            const data = await response.json();  // Assuming JSON response
+            localStorage.setItem('rasa_jwt', data.rasa_jwt);
+            return data.rasa_jwt;
+        } catch (error) {
+            console.error('Error fetching rasa_jwt:', error);
+            return null;
         }
+    };
 
-        console.log("token: ", jwt);
 
+
+    const initializeSocket = (rasa_jwt) => {
         const newSocket = io(process.env.REACT_APP_SOCKET_SERVER_URL, {
             "auth": {
-                "token": jwt
+                "token": rasa_jwt
             }
         });
 
@@ -73,13 +65,49 @@ function Basic() {
         newSocket.on('connect_error', (error) => {
             console.log('Connection failed:', error);
         });
+    }
+
+
+    const manageName = () => {
+        if (!localStorage.getItem('name')) {
+            localStorage.setItem('name', "default user");
+            setName(name);
+        }
+        setName(localStorage.getItem('name'));
+    };
+
+
+    useEffect(() => {
+        console.log("called");
+        const objDiv = document.getElementById('messageArea');
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }, [chat])
+
+    useEffect(() => {
+        console.log("useEffect called");
+
+        const storedJWT = localStorage.getItem('rasa_jwt');
+        if (storedJWT) {
+            initializeSocket(storedJWT);
+        } else {
+            fetchRasaJWT()
+                .then(fetchedJWT => {
+                    if (fetchedJWT) {
+                        initializeSocket(fetchedJWT);
+                    }
+                });
+        }
+        manageName();
 
         return () => {
-            newSocket.off('connect');
-            newSocket.off('disconnect');
-            newSocket.off('bot_uttered');
-            newSocket.off('connect_error');
-            newSocket.close()
+            if (socket != null) {
+                console.error("socket is null");
+                socket.off('connect');
+                socket.off('disconnect');
+                socket.off('bot_uttered');
+                socket.off('connect_error');
+                socket.close()
+            }
         };
     }, []);
 
@@ -105,7 +133,6 @@ function Basic() {
             socket.emit('user_uttered', { message: inputMessage, sender: name }, () => {
                 console.log("user_uttered invoked");
             });
-            // rasaAPI(name, inputMessage);
         }
         else {
             window.alert("Please enter valid message");
@@ -119,87 +146,55 @@ function Basic() {
     };
 
 
-    // const rasaAPI = async function handleClick(name, msg) {
-
-    //     //chatData.push({sender : "user", sender_id : name, msg : msg});
-
-
-    //     await fetch('http://localhost:5005/webhooks/rest/webhook', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json',
-    //             'charset': 'UTF-8',
-    //         },
-    //         credentials: "same-origin",
-    //         body: JSON.stringify({ "sender": name, "message": msg }),
-    //     })
-    //         .then(response => response.json())
-    //         .then((response) => {
-    //             if (response) {
-    //                 const temp = response[0];
-    //                 const recipient_id = temp["recipient_id"];
-    //                 const recipient_msg = temp["text"];
-    //                 const response_temp = { sender: "bot", recipient_id: recipient_id, msg: recipient_msg };
-
-    //                 setbotTyping(false);
-    //                 setChat(chat => [...chat, response_temp]);
-    //                 // scrollBottom();
-
-    //             }
-    //         })
-    // }
-
-    //start of transcriber
 
     const [TranscriberTest, setTranscriberTest] = useState('')
-	const [finalTranscriberTest, setFinalTranscriberTest] = useState(false)
+    const [finalTranscriberTest, setFinalTranscriberTest] = useState(false)
     const socketRef = useRef(null)
 
-	const handleChange = (e) => {
-        setInputMessage(e.target.value) 
-		setTranscriberTest(e.target.value)
-	}
+    const handleChange = (e) => {
+        setInputMessage(e.target.value)
+        setTranscriberTest(e.target.value)
+    }
 
-    const activateMicrophone = ( ) => {
+    const activateMicrophone = () => {
 
         console.log("Submit")
         //microphone access
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-            const mediaRecorder = new MediaRecorder(stream ,{mimeType: 'audio/webm'})
-            
+            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
+
             const socket = new WebSocket('ws://localhost:3003')
             socket.onopen = () => {
-	        console.log({ event: 'onopen' })
-	        mediaRecorder.addEventListener('dataavailable', async (event) => {
-		if (event.data.size > 0 && socket.readyState === 1) {
-			socket.send(event.data)
-		}
-	})
-	mediaRecorder.start(1000)
-}
+                console.log({ event: 'onopen' })
+                mediaRecorder.addEventListener('dataavailable', async (event) => {
+                    if (event.data.size > 0 && socket.readyState === 1) {
+                        socket.send(event.data)
+                    }
+                })
+                mediaRecorder.start(1000)
+            }
 
-socket.onmessage = (message) => {
-	
-	const transcript = message.data
-	if (transcript) {
-		console.log(transcript)
-		setInputMessage(transcript)
-	}
-}
+            socket.onmessage = (message) => {
 
-socket.onclose = () => {
-	console.log({ event: 'onclose' })
-}
+                const transcript = message.data
+                if (transcript) {
+                    console.log(transcript)
+                    setInputMessage(transcript)
+                }
+            }
 
-socket.onerror = (error) => {
-	console.log({ event: 'onerror', error })
-}
+            socket.onclose = () => {
+                console.log({ event: 'onclose' })
+            }
 
-socketRef.current = socket
+            socket.onerror = (error) => {
+                console.log({ event: 'onerror', error })
+            }
+
+            socketRef.current = socket
         })
     }
-  //end of transcriber 
+    //end of transcriber 
 
 
     const stylecard = {
@@ -282,7 +277,7 @@ socketRef.current = socket
                                     </div>
                                     <div className="">
                                         {isMicOn ?
-                                            <button type="button" className="circleBtn"onClick={toggleMic} ><TiMicrophone className="sendBtn" /></button>
+                                            <button type="button" className="circleBtn" onClick={toggleMic} ><TiMicrophone className="sendBtn" /></button>
                                             : <button type="button" className="circleBtn" onClick={() => { toggleMic(); activateMicrophone(); }}><TiMicrophoneOutline className="sendBtn" /></button>}
 
                                     </div>

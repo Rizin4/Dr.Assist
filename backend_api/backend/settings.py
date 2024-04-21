@@ -3,13 +3,14 @@ from datetime import timedelta
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from decouple import config
 
-
+SECRET_KEY = config('SECRET_KEY')
+RASA_SECRET_KEY = config('RASA_SECRET_KEY')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xmyy56c+#c$!7u^#8#&(egh&2_+or##y4+t)xps)i#zbhlw(5o'
 
 # Add a custom secret key for signing the additional access token
 #CUSTOM_SECRET_KEY = 'django-secure-xywtasdftyghcb(dcbndc//cnd+)'

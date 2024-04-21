@@ -30,22 +30,36 @@ const Login = () => {
       email: email,
       password: password,
     };
-try{
-    const {data} = await axios.post("http://localhost:8000/api/token/", user, 
-    { headers: {'Content-Type': 'application/json' } },
-    {withCredentials: true})
-    // .then(response => {console.log(data);} );
-    localStorage.clear();
-    localStorage.setItem("access_token", data.access);
-    localStorage.setItem("refresh_token", data.refresh);
-    localStorage.setItem("isAuth", true);
-   
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
-    navigate("/UserHome");
-  }catch(error){
-    console.error(error);
-    alert('Invalid credentials');
-}
+    try {
+      const { data } = await axios.post("http://localhost:8000/api/token/", user,
+        { headers: { 'Content-Type': 'application/json' } },
+        { withCredentials: true })
+      // .then(response => {console.log(data);} );
+      localStorage.clear();
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+      localStorage.setItem("isAuth", true);
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
+
+      const response = await axios.get('http://localhost:8000/api/chatbot-token/', {
+        headers: {
+          'Authorization': `Bearer ${data.access}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 200) {
+        console.log('chatbot_token:', response.data.access_token);
+        localStorage.setItem('rasa_jwt', response.data.access_token);
+      } else {
+        console.error('Error:', response.status, response.statusText);
+      }
+      navigate("/UserHome");
+    } catch (error) {
+      console.error(error);
+      alert('Invalid credentials');
+    }
   }
   // useEffect(() => {
   //   if(localStorage.getItem('access_token') === null){
