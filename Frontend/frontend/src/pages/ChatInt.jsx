@@ -28,7 +28,7 @@ const Basic = () => {
     const fetchRasaJWT = async () => {
         try {
             const access_token = localStorage.getItem('access_token');
-            const response = await axios.get(`${process.env.REACT_APP_DJANGO_SERVER}api/chatbot-token/`, {
+            const response = await axios.get(`${process.env.REACT_APP_DJANGO_SERVER}/api/chatbot-token/`, {
                 headers: {
                     'Authorization': `Bearer ${access_token}`,
                     'Content-Type': 'application/json'
@@ -229,7 +229,7 @@ const Basic = () => {
 
         try {
             const access_token = localStorage.getItem('access_token');
-            const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}api/transcribe-audio/`, formData, {
+            const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}/api/transcribe-audio/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${access_token}`,
                     'Content-Type': 'multipart/form-data'

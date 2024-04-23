@@ -33,7 +33,7 @@ const Login = () => {
       password: password,
     };
     try {
-      const { data } = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}api/token/`, user,
+      const { data } = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}/api/token/`, user,
         { headers: { 'Content-Type': 'application/json' } },
         { withCredentials: true })
       // .then(response => {console.log(data);} );
@@ -53,7 +53,7 @@ const Login = () => {
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
 
-      const response = await axios.get(`${process.env.REACT_APP_DJANGO_SERVER}api/chatbot-token/`, {
+      const response = await axios.get(`${process.env.REACT_APP_DJANGO_SERVER}/api/chatbot-token/`, {
         headers: {
           'Authorization': `Bearer ${data.access}`,
           'Content-Type': 'application/json'

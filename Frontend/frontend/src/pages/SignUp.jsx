@@ -57,7 +57,7 @@ const SignUp = () => {
     data.append('gender',formData.gender);
     console.log(data);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}api/register/`, data);
+      const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}/api/register/`, data);
       console.log(response.data);
     } catch (error) {
       console.error(error);

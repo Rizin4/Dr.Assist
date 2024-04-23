@@ -7,7 +7,7 @@ axios.interceptors.response.use(resp => resp, async error => {
         refresh = true;
 
         console.log(localStorage.getItem('refresh_token'))
-        const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}api/token/refresh/`, {
+        const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}/api/token/refresh/`, {
             refresh:localStorage.getItem('refresh_token')
         }, {
             headers: {

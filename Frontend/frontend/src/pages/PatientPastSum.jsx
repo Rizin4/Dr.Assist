@@ -52,7 +52,7 @@ const PatientPastSum = () => {
         }
     };
 
-   
+
     const columns = [
 
         {
@@ -72,7 +72,7 @@ const PatientPastSum = () => {
             options: {
 
                 customBodyRender: (value) => (
-                    <Button variant="contained" href={'http://127.0.0.1:8000' + value} target="_blank"> View Report
+                    <Button variant="contained" href={`${process.env.REACT_APP_DJANGO_SERVER}` + value} target="_blank"> View Report
                     </Button>
                 ),
                 filter: false,
@@ -97,13 +97,13 @@ const PatientPastSum = () => {
             label: "Share Report",
             options: {
                 customBodyRender: (value) => (
-                    
+
                     <Stack direction="row" spacing={2}>
                         <Button onClick={(e) => handleClickOpen(value, e)} variant="contained" endIcon={<SendIcon />}>Send Report</Button>
                         <Dialog open={open} onClose={handleClose}>
                             <DialogTitle>Choose a Doctor</DialogTitle>
                             <DialogContent>
-                                <Box component="form"  sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
 
                                <ListDoc/>
                                     
@@ -114,7 +114,7 @@ const PatientPastSum = () => {
                                 <Button onClick={handleClose}>Ok</Button>
                             </DialogActions>
                         </Dialog>
-                        <Button variant="outlined" color="error" onClick={(e) => handledelete(value,e)} startIcon={<DeleteIcon />}>
+                        <Button variant="outlined" color="error" onClick={(e) => handledelete(value, e)} startIcon={<DeleteIcon />}>
                             Delete Report
                         </Button>
                     </Stack>
@@ -125,7 +125,7 @@ const PatientPastSum = () => {
     ];
 
     const [users, setUsers] = useState([]);
-    const [update,setUpdate]=useState('');
+    const [update, setUpdate] = useState('');
 
 
     useEffect(() => {
@@ -136,7 +136,7 @@ const PatientPastSum = () => {
                 'Content-Type': 'application/json'
             }
         })
-            .then(function(response) {
+            .then(function (response) {
                 console.log(response.data);
                 setUsers(response.data);
             })
@@ -147,17 +147,17 @@ const PatientPastSum = () => {
     const handledelete = (value) => {
         console.log(value);
         const access_token = localStorage.getItem('access_token');
-        axios.delete('http://localhost:8000/api/report-gallery/'+value, {
+        axios.delete('http://localhost:8000/api/report-gallery/' + value, {
             headers: {
                 'Authorization': `Bearer ${access_token}`,
                 'Content-Type': 'application/json'
             }
         })
-            .then(function(response) {
+            .then(function (response) {
                 console.log(response.data);
                 alert('Report Deleted Successfully');
                 setUpdate(response.data);
-   })
+            })
             .catch(error => console.log(error));
 
     }
@@ -167,9 +167,9 @@ const PatientPastSum = () => {
         selectableRows: false,
         rowsPerPage: 5,
         rowsPerPageOptions: [5, 10, 15, 20],
-        download :"false",
-        print : "false",
-        viewColumns:"false",
+        download: "false",
+        print: "false",
+        viewColumns: "false",
         responsive: "standard",
     };
 
@@ -194,11 +194,11 @@ const PatientPastSum = () => {
             <ThemeProvider theme={getMuiTheme()}>
                 <div className="container-page">
                     <MUIDataTable className="container-page"
-                    title={"Your Generated Reports"}
-                    data={users}
-                    columns={columns}
-                    options={options}
-                />
+                        title={"Your Generated Reports"}
+                        data={users}
+                        columns={columns}
+                        options={options}
+                    />
                 </div>
             </ThemeProvider>
         </div>

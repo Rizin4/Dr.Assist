@@ -32,7 +32,7 @@ const DocHome = () => {
         const access_token = localStorage.getItem('access_token');
         const formData = new FormData();
         formData.append("file", file);
-        axios.post("http://127.0.0.1:8000/api/doctor-append/"+ value +"/" , formData, {
+        axios.post(`${process.env.REACT_APP_DJANGO_SERVER}/api/doctor-append/${value}/` , formData, {
             headers: {
                 'Authorization': `Bearer ${access_token}`,
                 'Content-Type': 'multipart/form-data'

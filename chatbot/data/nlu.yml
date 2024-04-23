@@ -24,9 +24,10 @@ nlu:
       - 6 feet
       - 180 centimeters
       - 5'7"
-      - 170
+      - 170 cm
+      - 192
       - 5 7
-      - 5.7
+      - 5.2
       - 183
 
   - intent: provide_weight
