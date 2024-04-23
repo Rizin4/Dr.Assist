@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import axios from "axios";
+import Chip from '@mui/material/Chip';
 
 const DocHome = () => {
     const userName = localStorage.getItem("userName") ;  
@@ -24,23 +25,23 @@ const DocHome = () => {
         width: 1,
       });
     
-      const handleFileUpload = (event) => {
-        const file = event.target.files[0];
+      const handleFileUpload = (value,e) => {
+        const file = e.target.files[0];
+        console.log(file);
+        console.log(users);
+        const access_token = localStorage.getItem('access_token');
         const formData = new FormData();
         formData.append("file", file);
-        axios.post("127.0.0.1:8000/api/doctor-append/", formData, {
+        axios.post("http://127.0.0.1:8000/api/doctor-append/"+ value +"/" , formData, {
             headers: {
-              "Content-Type": "multipart/form-data",
-              "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-              "x-rapidapi-key": "your-rapidapi-key-here",
-            },
+                'Authorization': `Bearer ${access_token}`,
+                'Content-Type': 'multipart/form-data'
+            }
           })
           .then((response) => {
-            // handle the response
             console.log(response);
           })
           .catch((error) => {
-            // handle errors
             console.log(error);
           });
       };
@@ -65,8 +66,24 @@ const columns = [
         name:"username",
         label:"patient Name"
     },  
-
-
+    {
+        name: "created_at",
+        label: "Creation Time"
+    },
+    {
+        name: "isModified",
+        label: "Report Status",
+        options: {
+            customBodyRender: (value) => (
+                (value ==true) ? (
+                    <Chip label="Reviewed" color="success" />
+                ) : (
+                    <Chip label="Pending Review" color="warning" />
+                )
+            ),
+ 
+        },
+    },
     {
         name:"file",
         label:"Patient Report",
@@ -81,7 +98,7 @@ const columns = [
     },
     }, 
     {
-        name:"reply",
+        name:"id",
         label:"Upload Report",
         options:{
             
@@ -94,7 +111,7 @@ const columns = [
                      startIcon={<CloudUploadIcon />}
                 >
                 Upload file
-                <VisuallyHiddenInput type="file/" onChange={handleFileUpload} />
+                <VisuallyHiddenInput type="file" onChange={(e)=>handleFileUpload(value,e)} />
                 </Button>        
             ),
             filter:false,
@@ -121,7 +138,7 @@ useEffect(() => {
         })
         .catch(error => console.log(error));
                 
-},[]);
+},1000);
 
 const options = {
   filterType: 'dropdown',

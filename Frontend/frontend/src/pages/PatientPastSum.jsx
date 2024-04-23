@@ -28,6 +28,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import axios from "axios";
 import UserHome from "./ListDoc";
+import ListDoc from "./ListDoc";
 
 
 
@@ -56,7 +57,8 @@ const PatientPastSum = () => {
 
         {
             name: "id",
-            label: "Serial No."
+            label: "Serial No.",
+            filter: false,
         },
 
         {
@@ -77,17 +79,17 @@ const PatientPastSum = () => {
             },
         },
         {
-            name: "file",
+            name: "isModified",
             label: "Report Status",
             options: {
                 customBodyRender: (value) => (
-                    (value !== "/media/report_gallery/*.pdf") ? (
+                    (value ==true) ? (
                         <Chip label="Reviewed" color="success" />
                     ) : (
                         <Chip label="Pending Review" color="warning" />
                     )
                 ),
-                filter: false,
+                
             },
         },
         {
@@ -103,38 +105,8 @@ const PatientPastSum = () => {
                             <DialogContent>
                                 <Box component="form"  sx={{ display: 'flex', flexWrap: 'wrap' }}>
 
-                               <UserHome/>
-                                    {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel htmlFor="demo-dialog-native">Age</InputLabel>
-                <Select
-                    native
-                    value={age}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="Age" id="demo-dialog-native" />}
-                >
-                <option aria-label="None" value="" />
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
-              </Select>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="demo-dialog-select-label">Age</InputLabel>
-              <Select
-                labelId="demo-dialog-select-label"
-                id="demo-dialog-select"
-                value={age}
-                onChange={handleChange}
-                input={<OutlinedInput label="Age" />}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl> */}
+                               <ListDoc/>
+                                    
                                 </Box>
                             </DialogContent>
                             <DialogActions>

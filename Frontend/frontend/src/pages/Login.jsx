@@ -40,6 +40,7 @@ const Login = () => {
       localStorage.clear();
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
+      localStorage.setItem("isDoc",data.isDoctor);
       const isDoctor =data.isDoctor
       {data.access!=null? ( localStorage.setItem("isAuth", true)):(localStorage.setItem("isAuth",false))}
       if (data.access) {

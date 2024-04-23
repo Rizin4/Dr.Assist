@@ -19,7 +19,7 @@ urlpatterns = [
     path('share-report-with-doctor/', views.share_report_with_doctor, name='share_report_with_doctor'),
     path('view-received-pdfs/', views.view_received_pdfs, name='view_received_pdfs'),
     path('view-pdf/<int:pdf_id>/', views.view_selected_pdf, name='view_selected_pdf'),
-    path('doctor-append/<int:patient_id>/<int:report_id>/', views.doctor_append, name='doctor_append'),
+    path('doctor-append/<int:report_id>/', views.doctor_append, name='doctor_append'),
     path('test/', views.testEndPoint, name='test'),
     path('', views.getRoutes),
     path('transcribe-audio/', views.transcribe_auido,name='transcribe_audio'),
