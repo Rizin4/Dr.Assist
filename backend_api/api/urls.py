@@ -22,5 +22,6 @@ urlpatterns = [
     path('doctor-append/<int:patient_id>/<int:report_id>/', views.doctor_append, name='doctor_append'),
     path('test/', views.testEndPoint, name='test'),
     path('', views.getRoutes),
+    path('transcribe-audio/', views.transcribe_auido,name='transcribe_audio'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

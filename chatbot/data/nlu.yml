@@ -106,6 +106,7 @@ nlu:
       - headeache, cough, cold 
       - I have a sore throat
       - fever
+      - difficulty in breathing
       - fever,cough and cold,runny nose
       - cough,runny nose and fever
       - caught a fever last monday and it's been getting worse

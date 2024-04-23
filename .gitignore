@@ -185,3 +185,4 @@ djangoenv/
 
 chatbot/credentials.yml
 chatbot/endpoints.yml
+processed_audio.wav

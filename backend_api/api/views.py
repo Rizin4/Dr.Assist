@@ -25,19 +25,21 @@ from reportlab.lib.units import inch
 from reportlab.lib import colors
 from .permissions import IsDoctor, IsPatient
 from .models import Report
-from rest_framework_simplejwt.tokens import AccessToken
 import PyPDF2
 import io
-from django.conf import settings
-# from .utils import generate_custom_jwt_payload
-
+import soundfile as sf
 
 # import google.generativeai as genai
+# from decouple import config 
 from django.conf import settings
 import re
 import ollama
 import json
 import jwt
+
+import whisper
+
+model = whisper.load_model("base")
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -100,25 +102,23 @@ def list_doctors(request):
         return Response(serializer.data)
     return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @permission_classes([IsAuthenticated, IsPatient])
 def generate_pdf(request):
     if request.method == "POST":
 
         # Retrieve chatbot summary
 
-        conversation_data =request.data.get('conversation_data')
+        conversation_data = request.data.get("conversation_data")
         if not conversation_data:
             return Response(
                 {"error": "conversation_data is required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # load_dotenv()
-
-        # genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+        # genai.configure(api_key=config('GOOGLE_API_KEY'))
         # model = genai.GenerativeModel("gemini-pro")
-
         # response = model.generate_content(prompt)
         # text = response.text
 
@@ -319,7 +319,7 @@ def generate_custom_access_token(request):
     access_token = auth_header.split(" ")[1] if " " in auth_header else auth_header
 
     # Generate custom payload
-    payload ={
+    payload = {
         "user": {
             "username": user.username,
             "role": "user",
@@ -335,17 +335,20 @@ def generate_custom_access_token(request):
     # access_token.payload.update(payload)
 
     return Response({"access_token": str(access_token)}, status=status.HTTP_200_OK)
-@api_view(['GET'])
+
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated, IsPatient])
 def report_gallery(request):
-    if request.method == 'GET':
+    if request.method == "GET":
         patient = request.user
         patient_pdfs = Report.objects.filter(user=patient)
         serializer = ReportSerializer(patient_pdfs, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-@api_view(['DELETE'])
+
+
+@api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def delete_report(request, pk):
     try:
@@ -354,30 +357,42 @@ def delete_report(request, pk):
         if request.user == report.user:
             report.delete()
 
-            return Response({'message': 'Report deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"message": "Report deleted successfully."},
+                status=status.HTTP_204_NO_CONTENT,
+            )
         else:
-            return Response({'error': 'You are not authorized to delete this report.'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"error": "You are not authorized to delete this report."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
     except Report.DoesNotExist:
-        return Response({'error': 'Report not found.'}, status=status.HTTP_404_NOT_FOUND)
-    
-@api_view(['POST'])
+        return Response(
+            {"error": "Report not found."}, status=status.HTTP_404_NOT_FOUND
+        )
+
+
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def share_report_with_doctor(request):
     # Extract report_id and doctor_id from request data
-    report_id = request.data.get('report_id')
-    doctor_id = request.data.get('doctor_id')
-    
+    report_id = request.data.get("report_id")
+    doctor_id = request.data.get("doctor_id")
+
     try:
         # Retrieve the PDF report from the database
         report = Report.objects.get(id=report_id)
-        
+
         # Check if the authenticated user is the owner of the report
         if request.user != report.user:
-            return Response({'error': 'You are not the owner of this report.'}, status=status.HTTP_403_FORBIDDEN)
-        
+            return Response(
+                {"error": "You are not the owner of this report."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         # Check if the chosen doctor exists and is a registered doctor
         doctor = User.objects.get(id=doctor_id, isDoctor=True)
-        
+
         # Share the report with the chosen doctor (update report in database)
         report.shared_with.add(doctor)
         report.save()
@@ -385,17 +400,23 @@ def share_report_with_doctor(request):
         # Optionally, you can return the updated report details in the response
         serializer = ReportSerializer(report)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     except Report.DoesNotExist:
-        return Response({'error': 'Report not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Report not found."}, status=status.HTTP_404_NOT_FOUND
+        )
     except User.DoesNotExist:
-        return Response({'error': 'Chosen doctor not found or is not registered as a doctor.'}, status=status.HTTP_404_NOT_FOUND)
-    
-@api_view(['GET'])
+        return Response(
+            {"error": "Chosen doctor not found or is not registered as a doctor."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated, IsDoctor])
 def view_received_pdfs(request):
     # Ensure that only authenticated doctor users can access this endpoint
-    if request.method == 'GET':
+    if request.method == "GET":
         # Retrieve the authenticated doctor user
         doctor = request.user
 
@@ -423,9 +444,45 @@ def view_selected_pdf(request, pdf_id):
 
     # Serve the PDF file as a response
     try:
-        return FileResponse(open(pdf.file.path, 'rb'), content_type='application/pdf')
+        return FileResponse(open(pdf.file.path, "rb"), content_type="application/pdf")
     except FileNotFoundError:
-        return Response({'error': 'PDF file not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "PDF file not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsPatient])
+def transcribe_auido(request):
+    try:
+        audio_blob = request.FILES["audioFile"]
+        blob_file = io.BytesIO(audio_blob.read())
+        try:
+            wav_data, sr = sf.read(blob_file)
+            sf.write("processed_audio.wav", wav_data, sr)
+
+        except RuntimeError as e:
+            return JsonResponse({"error": f"Error converting audio: {e}"})
+
+        # Make log-Mel spectrogram (representation for the model)
+        print(model.device)
+        audio = whisper.load_audio("processed_audio.wav")
+        audio = whisper.pad_or_trim(audio)
+        mel = whisper.log_mel_spectrogram(audio).to(model.device)
+        _, probs = model.detect_language(mel)
+        print(f"Detected language: {max(probs, key=probs.get)}")
+        options = whisper.DecodingOptions()
+        transcript = whisper.decode(model, mel, options)
+
+        print(f"transcript:{transcript.text}")
+
+        return Response({"text": transcript.text})
+
+    except KeyError:
+        return Response({"error": "Missing audio_file in the request"}, status=400)
+    except Exception as e:
+        return Response({"error": f"Transcription failed: {str(e)}"}, status=500)
+
     
 
 @api_view(['POST'])

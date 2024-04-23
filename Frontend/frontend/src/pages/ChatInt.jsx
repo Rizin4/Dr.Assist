@@ -6,18 +6,29 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { TiMicrophone } from "react-icons/ti";
 import { TiMicrophoneOutline } from "react-icons/ti";
+import CircularProgress from '@mui/material/CircularProgress';
 
-function Basic() {
+const Basic = () => {
+
     const [chat, setChat] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [botTyping, setbotTyping] = useState(false);
     const [socket, setSocket] = useState(null);
     const [name, setName] = useState('');
 
+    const [recorder, setRecorder] = useState(null);
+    const [audioBlob, setAudioBlob] = useState(null);
+    const [audioReady, setAudioReady] = useState(false);
+    const [isMicOn, setIsMicOn] = useState(false); // Initial state: mic off
+    const [isTranscribing, setIsTranscribing] = useState(false)
+
+
+
+
     const fetchRasaJWT = async () => {
         try {
             const access_token = localStorage.getItem('access_token');
-            const response = await axios.get('http://localhost:8000/api/chatbot-token/', {
+            const response = await axios.get(`${process.env.REACT_APP_DJANGO_SERVER}api/chatbot-token/`, {
                 headers: {
                     'Authorization': `Bearer ${access_token}`,
                     'Content-Type': 'application/json'
@@ -128,7 +139,6 @@ function Basic() {
             setChat(chat => [...chat, request_temp]);
             setbotTyping(true);
             setInputMessage('');
-            setTranscriberTest('');
             console.log("inputMessage: ", inputMessage);
             socket.emit('user_uttered', { message: inputMessage, sender: name }, () => {
                 console.log("user_uttered invoked");
@@ -139,111 +149,117 @@ function Basic() {
         }
     }
 
-    const [isMicOn, setIsMicOn] = useState(false); // Initial state: mic off
-
-    const toggleMic = () => {
-        setIsMicOn(!isMicOn); // Toggle the mic state
-    };
-
-
-
-    const [TranscriberTest, setTranscriberTest] = useState('')
-    const [finalTranscriberTest, setFinalTranscriberTest] = useState(false)
-    const socketRef = useRef(null)
 
     const handleChange = (e) => {
         setInputMessage(e.target.value)
-        setTranscriberTest(e.target.value)
     }
 
-    const activateMicrophone = () => {
 
-        console.log("Submit")
-        //microphone access
-        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
-
-            const socket = new WebSocket('ws://localhost:3003')
-            socket.onopen = () => {
-                console.log({ event: 'onopen' })
-                mediaRecorder.addEventListener('dataavailable', async (event) => {
-                    if (event.data.size > 0 && socket.readyState === 1) {
-                        socket.send(event.data)
-                    }
-                })
-                mediaRecorder.start(1000)
-            }
-
-            socket.onmessage = (message) => {
-
-                const transcript = message.data
-                if (transcript) {
-                    console.log(transcript)
-                    setInputMessage(transcript)
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
                 }
-            }
+            });
+            const mediaRecorder = new MediaRecorder(stream);
+            setRecorder(mediaRecorder);
 
-            socket.onclose = () => {
-                console.log({ event: 'onclose' })
-            }
+            mediaRecorder.ondataavailable = (e) => {
+                const audioData = new Blob([e.data], { type: 'audio/wav' });
+                setAudioBlob(audioData);
+            };
 
-            socket.onerror = (error) => {
-                console.log({ event: 'onerror', error })
-            }
+            mediaRecorder.onstop = () => {
+                setAudioReady(true)
 
-            socketRef.current = socket
-        })
+            };
+
+            mediaRecorder.start();
+        } catch (err) {
+            console.error('Error obtaining audio stream:', err);
+        }
+    };
+
+
+    const stopRecording = () => {// Define setRecordingComplete function
+
+        if (recorder) {
+            recorder.stop();
+            setRecorder(null);
+        };
     }
-    //end of transcriber 
+
+    useEffect(() => {
+        if (audioReady) {
+            if (!audioBlob || audioBlob.size === 0) {
+                console.error('Audio blob is empty or not ready.');
+                return;
+            } // Make sure audioBlob is not null
+            // const audioURL = URL.createObjectURL(audioBlob);
+            // const audio = new Audio(audioURL);
+            // audio.addEventListener('ended', () => {
+            //     console.log('Audio playback ended.');
+            //     URL.revokeObjectURL(audioURL); // Revoke when audio finishes playing
+            // });
+            // audio.addEventListener('loadeddata', () => {
+            //     audio.play().catch((e) => {
+            //         console.log("error in playing audio", e);
+            //     });;
+            // });
+            // audio.load();
+            setAudioReady(false)
+            transcribeAudio();
+        }
+    }, [audioReady]);
 
 
-    const stylecard = {
-        maxWidth: '35rem',
-        border: '1px solid black',
-        paddingLeft: '0px',
-        paddingRight: '0px',
-        borderRadius: '30px',
-        boxShadow: '0 16px 20px 0 rgba(0,0,0,0.4)'
+    const transcribeAudio = async () => {
 
-    }
-    const styleHeader = {
-        height: '4.5rem',
-        borderBottom: '1px solid black',
-        borderRadius: '30px 30px 0px 0px',
-        backgroundColor: '#2B3035',
+        if (!audioBlob || audioBlob.size === 0) {
+            console.error('Audio blob is empty or not ready.');
+            return;
+        }
+        setIsTranscribing(true)
+        const formData = new FormData();
+        formData.append('audioFile', audioBlob);
+        console.log(formData)
 
-    }
-    const styleFooter = {
-        //maxWidth : '32rem',
-        borderTop: '1px solid black',
-        borderRadius: '0px 0px 30px 30px',
-        backgroundColor: '#2B3035',
+        try {
+            const access_token = localStorage.getItem('access_token');
+            const response = await axios.post(`${process.env.REACT_APP_DJANGO_SERVER}api/transcribe-audio/`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${access_token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log(response)
+            const { data } = response;
+            console.log('Transcriber text:', data.text);
+            setInputMessage(data.text)
+            setIsTranscribing(false)
 
+        } catch (error) {
+            console.error('Error fetching transcriber text:', error);
+            return null;
+        }
+    };
 
-    }
-    const styleBody = {
-        paddingTop: '10px',
-        height: '28rem',
-        overflowY: 'a',
-        overflowX: 'hidden',
-
-    }
 
     return (
         <div>
-            {/* <button onClick={()=>rasaAPI("shreyas","hi")}>Try this</button> */}
-
-
             <div className="container">
                 <div className="row justify-content-center">
 
-                    <div className="card" style={stylecard}>
-                        <div className="cardHeader text-white" style={styleHeader}>
-                            <h2 style={{ marginBottom: '0px', textAlign: 'center' }}>AI Assistant</h2>
+                    <div className="card stylecard" >
+                        <div className="cardHeader text-white styleHeader" >
+                            {/* <h2 style={{ marginBottom: '0px', textAlign: 'center' }}>AI Assistant</h2> */}
                             {botTyping ? <h6>Dr.Assist is typing....</h6> : null}
 
                         </div>
-                        <div className="cardBody" id="messageArea" style={styleBody}>
+                        <div className="cardBody styleBody" id="messageArea" >
 
                             <div className="row msgarea">
                                 {chat.map((user, key) => (
@@ -269,17 +285,34 @@ function Basic() {
                             </div>
 
                         </div>
-                        <div className="cardFooter text-white" style={styleFooter}>
+                        <div className="cardFooter text-white styleFooter" >
                             <div className="row">
                                 <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-                                    <div className="col-9" style={{ paddingRight: '0px' }}>
+                                    <div className="col-9" style={{ paddingRight: '2px' }}>
                                         <input onChange={handleChange} value={inputMessage} type="text" className="msginp"></input>
                                     </div>
                                     <div className="">
-                                        {isMicOn ?
-                                            <button type="button" className="circleBtn" onClick={toggleMic} ><TiMicrophone className="sendBtn" /></button>
-                                            : <button type="button" className="circleBtn" onClick={() => { toggleMic(); activateMicrophone(); }}><TiMicrophoneOutline className="sendBtn" /></button>}
-
+                                        <button type="button"
+                                            className="circleBtn"
+                                            onClick={() => {
+                                                if (!isMicOn) {
+                                                    setIsMicOn(true);
+                                                    setInputMessage('');
+                                                    startRecording();
+                                                } else {
+                                                    setIsMicOn(false);
+                                                    stopRecording();
+                                                }
+                                            }}
+                                            disabled={isTranscribing}
+                                        >
+                                            {isTranscribing ?
+                                                <CircularProgress /> :
+                                                isMicOn ?
+                                                    <TiMicrophone className="sendBtn pulse" /> :
+                                                    <TiMicrophoneOutline className="sendBtn" />
+                                            }
+                                        </button>
                                     </div>
                                     <div className="col-2 cola">
                                         <button type="submit" className="circleBtn" ><IoMdSend className="sendBtn" /></button>
@@ -295,5 +328,4 @@ function Basic() {
         </div>
     );
 }
-
 export default Basic;
