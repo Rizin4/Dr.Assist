@@ -44,6 +44,7 @@ class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.FileField(upload_to='report_gallery/')
     created_at = models.DateTimeField(default=timezone.now)
+    isModified = models.BooleanField(default=False)
     shared_with = models.ManyToManyField(User, related_name='shared_reports')
 
     def share_with_doctor(self, doctor): # Method to share the report with a doctor.

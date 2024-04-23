@@ -462,7 +462,7 @@ def transcribe_auido(request):
             sf.write("processed_audio.wav", wav_data, sr)
 
         except RuntimeError as e:
-            return JsonResponse({"error": f"Error converting audio: {e}"})
+            return Response({"error": f"Error converting audio: {e}"})
 
         # Make log-Mel spectrogram (representation for the model)
         print(model.device)
@@ -518,6 +518,7 @@ def doctor_append(request, patient_id, report_id):
 
         # Update patient's PDF in the database
         patient_pdf.file = os.path.join('modified', new_pdf_filename)
+        patient_pdf.isModified = True
         patient_pdf.save()
 
     return Response({'message': 'PDF uploaded and appended successfully.'}, status=status.HTTP_200_OK)
