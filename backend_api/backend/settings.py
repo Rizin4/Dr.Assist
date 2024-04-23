@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'medhub_db',
         'USER': 'postgres',
-        'PASSWORD': 'Password@123',
+        'PASSWORD': 'postgres@123',
         'HOST': 'localhost',
         'PORT': '5432',
     }

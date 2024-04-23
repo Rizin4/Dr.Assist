@@ -32,7 +32,7 @@ python3.10 -m venv rasa_venv
 ### Install dependencies
 
 ```bash
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 ### Train Chatbot Model
