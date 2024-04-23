@@ -1,3 +1,4 @@
+import os
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from api.models import User
@@ -27,6 +28,7 @@ from .models import Report
 from rest_framework_simplejwt.tokens import AccessToken
 import PyPDF2
 import io
+from django.conf import settings
 # from .utils import generate_custom_jwt_payload
 
 
@@ -425,12 +427,11 @@ def view_selected_pdf(request, pdf_id):
     except FileNotFoundError:
         return Response({'error': 'PDF file not found'}, status=status.HTTP_404_NOT_FOUND)
     
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsDoctor])
 def doctor_append(request, patient_id, report_id):
-    
     doctor_pdf = request.FILES.get('file')
-
     # Check if patient and patient's PDF exist
     patient_pdf = get_object_or_404(Report, user_id=patient_id, id=report_id)
 
@@ -447,13 +448,19 @@ def doctor_append(request, patient_id, report_id):
         # Add doctor's PDF pages to new PDF writer
         pdf_writer.append_pages_from_reader(PyPDF2.PdfReader(doctor_pdf))
 
+        # Construct the path for the new PDF file
+        new_pdf_filename = f'{report_id}_combined.pdf'
+        new_pdf_path = os.path.join(settings.MEDIA_ROOT, 'modified', new_pdf_filename)
+
+        # Create the 'modified' directory if it doesn't exist
+        os.makedirs(os.path.dirname(new_pdf_path), exist_ok=True)
+
         # Write new PDF to disk
-        new_pdf_path = f'media/report_gallery/{report_id}_combined_pdf.pdf'  # Customize the path as needed
         with open(new_pdf_path, 'wb') as new_pdf_file:
             pdf_writer.write(new_pdf_file)
 
-    # Update patient's PDF in the database
-    patient_pdf.file = new_pdf_path
-    patient_pdf.save()
+        # Update patient's PDF in the database
+        patient_pdf.file = os.path.join('modified', new_pdf_filename)
+        patient_pdf.save()
 
     return Response({'message': 'PDF uploaded and appended successfully.'}, status=status.HTTP_200_OK)
