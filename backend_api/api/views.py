@@ -23,14 +23,15 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT
 from .permissions import IsDoctor, IsPatient
 from .models import Report
 import PyPDF2
 import io
 import soundfile as sf
 
-# import google.generativeai as genai
-# from decouple import config 
+import google.generativeai as genai
+from decouple import config 
 from django.conf import settings
 import re
 import ollama
@@ -41,6 +42,17 @@ import whisper
 
 model = whisper.load_model("base")
 
+test = ollama.chat(
+            model="mistral:latest",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "Hi",
+                },
+            ],
+            stream=False,
+            keep_alive= -1,
+        )
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -117,52 +129,48 @@ def generate_pdf(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # genai.configure(api_key=config('GOOGLE_API_KEY'))
-        # model = genai.GenerativeModel("gemini-pro")
-        # response = model.generate_content(prompt)
-        # text = response.text
 
         prompt_text = "Analyze the provided patient interview data, given in a dictionary format of questions and respective answers. Use this data to fill in the JSON case summary report template below, substituting 'unspecified' if the patient does not provide an answer or value. Maintain the template's structure and ensure the generated JSON is valid."
 
         jsontemplate = {
-            "patient_info": {
-                "height": "unspecified",
-                "weight": "unspecified",
-                "temperature": "unspecified",
-                "blood_pressure": "unspecified",
-                "glucose_reading": "unspecified",
-                "blood_group": "unspecified",
+            "Patient info": {
+                "Height": "unspecified",
+                "Weight": "unspecified",
+                "Temperature": "unspecified",
+                "Blood pressure": "unspecified",
+                "Glucose reading": "unspecified",
+                "Blood group": "unspecified",
             },
-            "allergies": {
-                "medication_allergies": "unspecified",
-                "food_allergies": "unspecified",
-                "other_allergies": "unspecified",
+            "Allergies": {
+                "Medication Allergies": "unspecified",
+                "Food Allergies": "unspecified",
+                "Other Allergies": "unspecified",
             },
-            "current_medications": "unspecified",
-            "symptoms": {
-                "onset": "unspecified",
-                "description": "unspecified",
-                "progression": "unspecified",
+            "Current Medications": "unspecified",
+            "Symptoms": {
+                "Onset": "unspecified",
+                "Description": "unspecified",
+                "Progression": "unspecified",
             },
-            "medical_history": {
-                "past_illnesses": "unspecified",
-                "past_surgeries": "unspecified",
-                "family_history": "unspecified",
+            "Medical History": {
+                "Past illnesses": "unspecified",
+                "Past surgeries": "unspecified",
+                "Family history": "unspecified",
             },
-            "lifestyle": {
-                "smoking": "unspecified",
-                "alcohol": "unspecified",
-                "diet": "unspecified",
-                "exercise": "unspecified",
-                "sleep_issues": "unspecified",
-                "stress": "unspecified",
+            "Lifestyle": {
+                "Smoking": "unspecified",
+                "Alcohol": "unspecified",
+                "Diet": "unspecified",
+                "Exercise": "unspecified",
+                "Sleep issues": "unspecified",
+                "Stress": "unspecified",
             },
-            "social_determinants": {
-                "education_level": "unspecified",
-                "job": "unspecified",
-                "living_situation": "unspecified",
+            "Social determinants": {
+                "Education level": "unspecified",
+                "Job": "unspecified",
+                "Living situation": "unspecified",
             },
-            "added_info": "unspecified",
+            "Added info": "unspecified",
         }
 
         def extract_json(text):
@@ -207,13 +215,19 @@ def generate_pdf(request):
                 },
             ],
             stream=False,
-            keep_alive="5m",
+            keep_alive= -1,
         )
+        # genai.configure(api_key=config('GOOGLE_API_KEY'))
+        # model = genai.GenerativeModel("gemini-pro")
+        # response = model.generate_content(prompt)
+        # text = response.text
+
         text = response["message"]["content"]
 
         extracted_json = extract_json(text.replace("'", '"'))
         chatbot_summary = json.loads(extracted_json)
         print(chatbot_summary)
+
         # Fetch user details from the authenticated user
         user = request.user
         user_details = {
@@ -236,13 +250,24 @@ def generate_pdf(request):
             fontSize=16,
             textColor="navy",
             spaceAfter=12,
+            underlineWidth=1,  
+            
+        )
+        custom_title_2 = ParagraphStyle(
+            name="CustomTitle2",
+            parent=styles["Heading2"],
+            fontSize=10,
+            textColor="black",
+            spaceAfter=15,
+            alignment=TA_LEFT,
         )
         custom_normal_style = ParagraphStyle(
             name="CustomNormal",
             parent=styles["Normal"],
             fontSize=12,
             textColor="black",
-            spaceAfter=6,
+            alignment=TA_LEFT,
+            spaceAfter=6,   
         )
 
         # Use custom styles in the PDF generation
@@ -261,7 +286,7 @@ def generate_pdf(request):
         )
 
         # Print patient_info before the loop
-        patient_info = chatbot_summary.get("patient_info", {})
+        patient_info = chatbot_summary.get("Patient info", {})
         for category, info in patient_info.items():
             elements.append(
                 Paragraph(
@@ -275,10 +300,10 @@ def generate_pdf(request):
         # Add sections from chatbot summary
         for section_name, section_data in chatbot_summary.items():
             if (
-                section_name != "patient_info"
+                section_name != "Patient info"
             ):  # Skip patient_info as it's already printed
                 elements.append(
-                    Paragraph(section_name.capitalize(), custom_title_style)
+                    Paragraph(section_name.capitalize(), custom_title_2)
                 )
                 if isinstance(section_data, dict):
                     for field_name, field_value in section_data.items():
