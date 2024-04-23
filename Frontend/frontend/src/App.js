@@ -5,7 +5,6 @@ import UserInfo from './pages/UserInfo';
 import DoctorInfo from './pages/DoctorInfo';
 import { Routes,Route } from 'react-router-dom';
 import ChatInt from './pages/ChatInt';
-import UserHome from './pages/UserHome';
 import TranscribePrototype from './pages/TranscribePrototype';
 import DocHome from './pages/DocHome';
 import Login from './pages/Login';
@@ -26,7 +25,6 @@ function App() {
       <Route path="/UserInfo" element={<UserInfo />} />
       <Route path="/DoctorInfo" element={<DoctorInfo />} />
       <Route path="/Chat" element={<ChatInt/>} />
-      <Route path="/UserHome" element={<UserHome />} />
       <Route path="/Navibar" element={<NaviBar />} />
       <Route path="/TranscribePrototype" element={<TranscribePrototype />} />
       <Route path='/DocHome' element={<DocHome />} />

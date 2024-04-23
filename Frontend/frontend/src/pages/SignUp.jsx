@@ -8,7 +8,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/en-gb';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-
 import axios from 'axios';
 
 const SignInContainer = styled(Container)(({ theme }) => ({
@@ -16,11 +15,13 @@ const SignInContainer = styled(Container)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  
 }));
 
 const SignInForm = styled("form")(({ theme }) => ({
   width: "100%",
   marginTop: theme.spacing(1),
+  overflowY: "auto",
 }));
 
 const SignUp = () => {
@@ -62,7 +63,7 @@ const SignUp = () => {
       console.error(error);
       alert('Error:'+error);
     }
-
+    alert("User registered successfully, please login to continue");
     navigate("/");
   };
 
