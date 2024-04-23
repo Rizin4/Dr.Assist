@@ -39,9 +39,9 @@ const Navibar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           { <Nav className="me-auto">
-          {/* <Nav.Link  as={Link} to="/UserHome" className="nav-menu">User Home</Nav.Link>
-            <Nav.Link as={Link} to="/TranscribePrototype">Text2speech test</Nav.Link>
-            <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
+           <Nav.Link  as={Link} to="/Chat" className="nav-menu">Chat Now</Nav.Link>
+            <Nav.Link as={Link} to="/PastSum">View Summaries</Nav.Link>
+            {/* <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item as={Link} to="/DocHome">DocHome</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
@@ -51,7 +51,7 @@ const Navibar = () => {
               <NavDropdown.Item href="#action/3.4">
                 Separated link
               </NavDropdown.Item>
-            </NavDropdown> */}
+            </NavDropdown>  */}
           </Nav> } //add some nav links here???
           {location.pathname === "/" || location.pathname === "/Signup" ? (
             <>
@@ -71,11 +71,10 @@ const Navibar = () => {
               <Nav> 
               {isAuth && (
           <NavDropdown title={`Hello ${userName}`} id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Edit Profile</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
+              <NavDropdown.Item as={Link} to="/Chat">Chat With Dr. Assist</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/PastSum">
                 Past Summaries
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleLogout}>
                 Log Out
