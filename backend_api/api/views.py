@@ -401,9 +401,17 @@ def view_received_pdfs(request):
         received_reports = Report.objects.filter(shared_with=doctor)
 
         # Serialize the reports along with user details
-        serialized_reports = ReportSerializer(received_reports, many=True)
+        serialized_reports = ReportSerializer(received_reports, many=True).data
 
-        return Response(serialized_reports.data, status=status.HTTP_200_OK)
+        # Extract the usernames of all users who shared the PDFs
+        shared_usernames = [report.user.username for report in received_reports]
+
+        # Add the usernames to the serialized data
+        for report_data, username in zip(serialized_reports, shared_usernames):
+            report_data['username'] = username
+
+        return Response(serialized_reports, status=status.HTTP_200_OK)
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsPatient])
