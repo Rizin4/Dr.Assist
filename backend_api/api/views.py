@@ -487,10 +487,10 @@ def transcribe_auido(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsDoctor])
-def doctor_append(request, patient_id, report_id):
+def doctor_append(request, report_id):
     doctor_pdf = request.FILES.get('file')
     # Check if patient and patient's PDF exist
-    patient_pdf = get_object_or_404(Report, user_id=patient_id, id=report_id)
+    patient_pdf = get_object_or_404(Report, id=report_id)
 
     # Append doctor's PDF to patient's PDF
     patient_pdf_file = patient_pdf.file.path
